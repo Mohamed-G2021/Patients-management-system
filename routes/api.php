@@ -20,14 +20,20 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('admins',[AdminController::class, 'index']);
+Route::post('admins',[AdminController::class, 'store']);
+Route::post('admins/{id}',[AdminController::class, 'update']);
+Route::delete('admins/{id}',[AdminController::class, 'destroy']);
 
 Route::get('doctors',[DoctorController::class, 'index']);
+Route::get('doctors/{id}',[DoctorController::class, 'show']);
 Route::post('doctors',[DoctorController::class, 'store']);
 Route::post('doctors/{id}',[DoctorController::class, 'update']);
 Route::delete('doctors/{id}',[DoctorController::class, 'destroy']);
 
 Route::get('patients',[PatientController::class, 'index']);
+Route::get('patients/{id}',[PatientController::class, 'show']);
 Route::post('patients',[PatientController::class, 'store']);
+Route::post('patients/search',[PatientController::class,'search']);
 Route::post('patients/{id}',[PatientController::class, 'update']);
 Route::delete('patients/{id}',[PatientController::class, 'destroy']);
-
