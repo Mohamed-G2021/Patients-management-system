@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('uterine_cancer_tests', function (Blueprint $table) {
             $table->id();
-            $table->boolean('lynch_syndrome(+ve,-ve)');
+            $table->boolean('lynch_syndrome');
             $table->boolean('irregular_bleeding');
             $table->string('tvs_perimetrium_result');
             $table->string('tvs_myometrium_result');

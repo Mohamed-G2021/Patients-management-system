@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Storage;
 class GeneralExamination extends Model
 {
     use HasFactory;
-    protected $table = 'generalexaminations';
-    protected $fillable=[ 
+    protected $table = 'general_examinations';
+    protected $fillable=[
         'height',
         'pulse',
         'weight',
         'random_blood_sugar',
         'blood_pressure',
-        'investigation', 
+        'investigation',
      ];
      public function getInvestigationUrlAttribute()
      {

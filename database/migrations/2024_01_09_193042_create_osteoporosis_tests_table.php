@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('osteoporosis_tests', function (Blueprint $table) {
             $table->id();
             $table->integer('age');
-            $table->integer('weight');
+            $table->float('weight');
             $table->boolean('current_oestrogen_use');
             $table->string('recommendations');
             $table->string('investigation');

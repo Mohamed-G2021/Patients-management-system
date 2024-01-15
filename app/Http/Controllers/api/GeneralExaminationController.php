@@ -13,7 +13,7 @@ class GeneralExaminationController extends Controller
      */
     public function index()
     {
-        
+
     }
 
     /**
@@ -22,24 +22,25 @@ class GeneralExaminationController extends Controller
     public function store(Request $request)
     {
         $data=$request->validate([
-           
                 'height' => 'required',
                 'pulse' => 'required',
                 'weight' => 'required',
                 'random_blood_sugar' => 'required',
                 'blood_pressure' => 'required',
-                'investigation' => 'required|file|mimes:pdf,doc,docx', 
+                'investigation' => 'nullable|file|mimes:pdf,doc,docx',
             ]);
             $investigationFile = $request->file('investigation');
-            $investigationFileName = $investigationFile->getClientOriginalName();
-    
-            // Save only the filename to the database
-            $data['investigation'] = $investigationFileName;
+
+            if($investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName();
+
+                $data['investigation'] = $investigationFileName;
+
+                $investigationFile->storeAs('generalexaminationinvestigations', $investigationFileName, 'public');
+            }
+
             $examination = GeneralExamination::create($data);
-    
-            // Save the file to storage with the original filename
-            $investigationFile->storeAs('generalexaminationinvestigations', $investigationFileName, 'public');
-    
+
             return response()->json([
                 'message' => 'General examination has been saved successfully',
                 'examination' => $examination], 201);
@@ -57,7 +58,7 @@ class GeneralExaminationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-      
+
         $data = $request->validate([
             'height' => 'required',
             'pulse' => 'required',
@@ -70,7 +71,7 @@ class GeneralExaminationController extends Controller
         $examination = GeneralExamination::find($id);
         $examination->update($data);
 
-        
+
         if ($request->hasFile('investigation')) {
             $newInvestigationFile = $request->file('investigation');
             $newInvestigationFileName = $newInvestigationFile->getClientOriginalName();
