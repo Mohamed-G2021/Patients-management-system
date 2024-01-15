@@ -39,7 +39,8 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $doctor =Doctor::find($id);
+        return $doctor;
     }
 
     /**

@@ -26,6 +26,7 @@ class PatientController extends Controller
             "national_id"=> "required",
             "name" => "required",
             "age"=>"required",
+            "phone_number"=> "required",
             "date_of_birth"=> "required",
             "address"=> "required",
             "marital_state"=> "required",
@@ -34,9 +35,8 @@ class PatientController extends Controller
             "relative_name"=> "required",
             "relative_phone" => "required"
         ]);
-        
+        $data['patient_id']=random_int(10000, 99999);
         $patient = Patient::create($data);
-    
         return response()->json(['message' => 'Patient has been saved successfully', 'patient' => $patient], 200);
     }
 
@@ -45,7 +45,8 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $patient=Patient::find($id);
+        return $patient;
     }
 
     /**
@@ -57,6 +58,7 @@ class PatientController extends Controller
             "national_id"=> "required",
             "name" => "required",
             "age"=>"required",
+            "phone_number"=> "required",
             "date_of_birth"=> "required",
             "address"=> "required",
             "marital_state"=> "required",
@@ -79,6 +81,12 @@ class PatientController extends Controller
     {
         $patient= Patient::find($id);
         $patient->delete();
-        return response()->json(['patient    has been deleted successfully']);
+        return response()->json(['patient has been deleted successfully']);
+    }
+
+    public function Search(Request $request)
+    {
+         $patient=Patient::where('patient_id',$request->patient_id)->first();
+         return $patient;
     }
 }
