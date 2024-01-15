@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\api\AdminController;
 use App\Http\Controllers\api\DoctorController;
+use App\Http\Controllers\api\GeneralExaminationController;
+use App\Http\Controllers\api\GynaecologicalHistoryTestController;
+use App\Http\Controllers\api\ObstetricHistoryTestController;
 use App\Http\Controllers\api\PatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,3 +40,18 @@ Route::post('patients',[PatientController::class, 'store']);
 Route::post('patients/search',[PatientController::class,'search']);
 Route::post('patients/{id}',[PatientController::class, 'update']);
 Route::delete('patients/{id}',[PatientController::class, 'destroy']);
+
+Route::get('examinations',[GeneralExaminationController::class, 'index']);
+Route::get('examinations/{id}',[GeneralExaminationController::class, 'show']);
+Route::post('examinations',[GeneralExaminationController::class, 'store']);
+Route::post('examinations/{id}',[GeneralExaminationController::class, 'update']);
+
+Route::get('obstetrics',[ObstetricHistoryTestController::class, 'index']);
+Route::get('obstetrics/{id}',[ObstetricHistoryTestController::class, 'show']);
+Route::post('obstetrics',[ObstetricHistoryTestController::class, 'store']);
+Route::post('obstetrics/{id}',[ObstetricHistoryTestController::class, 'update']);
+
+Route::get('gynaecologicalhistory',[GynaecologicalHistoryTestController::class, 'index']);
+Route::get('gynaecologicalhistory/{id}',[GynaecologicalHistoryTestController::class, 'show']);
+Route::post('gynaecologicalhistory',[GynaecologicalHistoryTestController::class, 'store']);
+Route::post('gynaecologicalhistory/{id}',[GynaecologicalHistoryTestController::class, 'update']);
