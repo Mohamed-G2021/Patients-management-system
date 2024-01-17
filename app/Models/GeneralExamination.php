@@ -18,8 +18,4 @@ class GeneralExamination extends Model
         'blood_pressure',
         'investigationFiles',
     ];
-
-    protected $casts = [
-        'investigationFiles' => 'json',
-    ];
 }
