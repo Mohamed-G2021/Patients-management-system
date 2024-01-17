@@ -36,7 +36,7 @@ class GeneralExaminationController extends Controller
 
                 $data['investigation'] = $investigationFileName;
 
-                $investigationFile->storeAs('generalexaminationinvestigations', $investigationFileName, 'public');
+                $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
             }
 
             $examination = GeneralExamination::create($data);
@@ -58,26 +58,24 @@ class GeneralExaminationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
         $data = $request->validate([
             'height' => 'required',
             'pulse' => 'required',
             'weight' => 'required',
             'random_blood_sugar' => 'required',
             'blood_pressure' => 'required',
-            'investigation' => 'required|file|mimes:pdf,doc,docx',
+            'investigation' => 'nullable|file|mimes:pdf,doc,docx',
         ]);
 
         $examination = GeneralExamination::find($id);
         $examination->update($data);
-
 
         if ($request->hasFile('investigation')) {
             $newInvestigationFile = $request->file('investigation');
             $newInvestigationFileName = $newInvestigationFile->getClientOriginalName();
             $data['investigation'] = $newInvestigationFileName;
             $examination->update($data);
-            $newInvestigationFile->storeAs('generalexaminationinvestigations', $newInvestigationFileName, 'public');
+            $newInvestigationFile->storeAs('general_examination_investigations', $newInvestigationFileName, 'public');
         }
 
         return response()->json(['message' => 'General examination has been updated successfully', 'examination' => $examination], 200);
