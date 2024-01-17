@@ -27,26 +27,28 @@ class GeneralExaminationController extends Controller
                 'weight' => 'required',
                 'random_blood_sugar' => 'required',
                 'blood_pressure' => 'required',
-                'investigationFiles' => 'nullable|file',
+                'investigationFiles' => 'nullable',
                 'investigationFiles.*'=>'nullable|file',
             ]);
+
             if($request->hasfile('investigationFiles')){
+                $filesNames = [];
                 foreach($request->file('investigationFiles')  as $investigationFile){
-                $investigationFileName = $investigationFile->getClientOriginalName(). "." . $investigationFile->getClientOriginalExtension();
+                $investigationFileName = $investigationFile->getClientOriginalName();
                 $filesNames[]=$investigationFileName;
 
                 $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
                 }
                 $data['investigationFiles'] = json_encode($filesNames);
-                
-            }   
-                
+
+            }
+
             $examination = GeneralExamination::create($data);
-             
+
             return response()->json([
                 'message' => 'General examination has been saved successfully',
                 'examination' => $examination], 201);
-        
+
     }
     /**
      * Display the specified resource.
