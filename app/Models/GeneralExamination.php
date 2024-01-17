@@ -16,12 +16,10 @@ class GeneralExamination extends Model
         'weight',
         'random_blood_sugar',
         'blood_pressure',
-        'investigation',
-     ];
-     public function getInvestigationUrlAttribute()
-     {
-         return $this->attributes['investigation']
-             ? Storage::url('investigations/' . $this->attributes['investigation'])
-             : null;
-     }
+        'investigationFiles',
+    ];
+
+    protected $casts = [
+        'investigationFiles' => 'json',
+    ];
 }

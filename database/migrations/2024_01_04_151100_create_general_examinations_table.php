@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float('weight');
             $table->float('random_blood_sugar');
             $table->string('blood_pressure');
-            $table->string('investigation')->nullable();
+            $table->json('investigationFiles')->nullable();
             $table->timestamps();
         });
     }

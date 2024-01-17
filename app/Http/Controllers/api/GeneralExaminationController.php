@@ -27,24 +27,27 @@ class GeneralExaminationController extends Controller
                 'weight' => 'required',
                 'random_blood_sugar' => 'required',
                 'blood_pressure' => 'required',
-                'investigation' => 'nullable|file|mimes:pdf,doc,docx',
+                'investigationFiles' => 'nullable|file',
+                'investigationFiles.*'=>'nullable|file',
             ]);
-            $investigationFile = $request->file('investigation');
-
-            if($investigationFile){
-                $investigationFileName = $investigationFile->getClientOriginalName();
-
-                $data['investigation'] = $investigationFileName;
+            if($request->hasfile('investigationFiles')){
+                foreach($request->file('investigationFiles')  as $investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName(). "." . $investigationFile->getClientOriginalExtension();
+                $filesNames[]=$investigationFileName;
 
                 $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
-            }
-
+                }
+                $data['investigationFiles'] = json_encode($filesNames);
+                
+            }   
+                
             $examination = GeneralExamination::create($data);
-
+             
             return response()->json([
                 'message' => 'General examination has been saved successfully',
                 'examination' => $examination], 201);
-        }
+        
+    }
     /**
      * Display the specified resource.
      */
@@ -66,6 +69,7 @@ class GeneralExaminationController extends Controller
             'blood_pressure' => 'required',
             'investigation' => 'nullable|file|mimes:pdf,doc,docx',
         ]);
+        // ErrorException: Undefined variable $examination in file /home/hager/updated patients/Patients-management-system/app/Http/Controllers/api/GeneralExaminationController.php on line 50
 
         $examination = GeneralExamination::find($id);
         $examination->update($data);
