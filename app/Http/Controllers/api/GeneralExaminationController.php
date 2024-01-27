@@ -71,7 +71,6 @@ class GeneralExaminationController extends Controller
             'blood_pressure' => 'required',
             'investigation' => 'nullable|file|mimes:pdf,doc,docx',
         ]);
-        // ErrorException: Undefined variable $examination in file /home/hager/updated patients/Patients-management-system/app/Http/Controllers/api/GeneralExaminationController.php on line 50
 
         $examination = GeneralExamination::find($id);
         $examination->update($data);
