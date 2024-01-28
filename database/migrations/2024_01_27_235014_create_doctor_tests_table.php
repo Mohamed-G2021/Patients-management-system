@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('obstetric_history_tests', function (Blueprint $table) {
+        Schema::create('doctor_tests', function (Blueprint $table) {
             $table->id();
-            $table->integer('gravidity');
-            $table->integer('parity');
-            $table->integer('abortion');
-            $table->string('notes');
-            $table->string('investigation')->nullable();   
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->morphs('test');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('obstetric_history_tests');
+        Schema::dropIfExists('doctor_tests');
     }
 };

@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_examination_tests', function (Blueprint $table) {
+        Schema::create('general_examination_history_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('test_id')
+            ->constrained('general_examination_tests')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->float('height');
             $table->integer('pulse');
             $table->float('weight');
@@ -32,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('general_examinations');
+        Schema::dropIfExists('general_examination_history_tests');
     }
 };

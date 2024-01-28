@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('uterine_cancer_tests', function (Blueprint $table) {
+        Schema::create('uterine_cancer_history_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('test_id')
+            ->constrained('uterine_cancer_tests')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('lynch_syndrome');
             $table->boolean('irregular_bleeding');
             $table->string('tvs_perimetrium_result');
@@ -37,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('uterine_cancer_tests');
+        Schema::dropIfExists('uterine_cancer_history_tests');
     }
 };

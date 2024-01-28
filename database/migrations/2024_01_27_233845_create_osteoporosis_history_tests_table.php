@@ -11,19 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_examination_tests', function (Blueprint $table) {
+        Schema::create('osteoporosis_history_tests', function (Blueprint $table) {
             $table->id();
-            $table->float('height');
-            $table->integer('pulse');
+            $table->foreignId('test_id')
+            ->constrained('osteoporosis_tests')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->integer('age');
             $table->float('weight');
-            $table->float('random_blood_sugar');
-            $table->string('blood_pressure');
-            $table->json('investigationFiles')->nullable();
+            $table->boolean('current_oestrogen_use');
+            $table->string('recommendations');
+            $table->string('investigation');
+            $table->timestamps();
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('general_examinations');
+        Schema::dropIfExists('osteoporosis_history_tests');
     }
 };

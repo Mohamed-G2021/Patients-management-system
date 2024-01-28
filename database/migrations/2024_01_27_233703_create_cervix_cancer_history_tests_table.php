@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cervix_cancer_tests', function (Blueprint $table) {
+        Schema::create('cervix_cancer_history_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('test_id')
+            ->constrained('cervix_cancer_tests')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('hpv_vaccine');
             $table->string('via_test_result');
             $table->string('via_test_comment')->nullable();
@@ -33,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cervix_cancer_tests');
+        Schema::dropIfExists('cervix_cancer_history_tests');
     }
 };

@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('recommendations');
             $table->string('investigation');
             $table->timestamps();
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 

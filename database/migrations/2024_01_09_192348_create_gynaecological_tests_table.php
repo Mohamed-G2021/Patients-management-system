@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('breast_cancer_tests', function (Blueprint $table) {
+        Schema::create('gynaecological_tests', function (Blueprint $table) {
             $table->id();
-            $table->integer('age');
-            $table->string('family_history');
-            $table->string('recommendations');
+            $table->string('date_of_last_period');
+            $table->string('menstrual_cycle_abnormalities');
+            $table->boolean('contact_bleeding');
+            $table->boolean('menopause')->nullable();
+            $table->integer('menopause_age')->nullable();
+            $table->boolean('using_of_contraception')->nullable();
+            $table->enum('contraception_method',['Pills','IUD','Injectable','Other'])->nullable();
             $table->string('investigation')->nullable();
             $table->foreignId('patient_id')
             ->constrained('patients')
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('breast_cancer_tests');
+        Schema::dropIfExists('gynaecological_tests');
     }
 };

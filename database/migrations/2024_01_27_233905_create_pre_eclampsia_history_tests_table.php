@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cervix_cancer_tests', function (Blueprint $table) {
+        Schema::create('pre_eclampsia_history_tests', function (Blueprint $table) {
             $table->id();
-            $table->boolean('hpv_vaccine');
-            $table->string('via_test_result');
-            $table->string('via_test_comment')->nullable();
-            $table->string('pap_smear_result');
-            $table->string('pap_smear_comment')->nullable();
-            $table->string('recommendations');
+            $table->foreignId('test_id')
+            ->constrained('pre_eclampsia_tests')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->boolean('history_of_pre-eclampsia');
+            $table->integer('number_of_pregnancies_with_pe');
+            $table->string('date_of_pregnancies_with_pe');
+            $table->string('fate_of_the_pregnancy');
             $table->string('investigation');
             $table->foreignId('patient_id')
             ->constrained('patients')
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cervix_cancer_tests');
+        Schema::dropIfExists('pre_eclampsia_history_tests');
     }
 };

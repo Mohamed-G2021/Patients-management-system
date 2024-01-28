@@ -18,7 +18,12 @@ return new class extends Migration
             $table->string('date_of_pregnancies_with_pe');
             $table->string('fate_of_the_pregnancy');
             $table->string('investigation');
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->timestamps();
+
         });
     }
 

@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_examination_tests', function (Blueprint $table) {
+        Schema::create('obstetric_tests', function (Blueprint $table) {
             $table->id();
-            $table->float('height');
-            $table->integer('pulse');
-            $table->float('weight');
-            $table->float('random_blood_sugar');
-            $table->string('blood_pressure');
-            $table->json('investigationFiles')->nullable();
+            $table->integer('gravidity');
+            $table->integer('parity');
+            $table->integer('abortion');
+            $table->string('notes');
+            $table->string('investigation')->nullable();   
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('general_examinations');
+        Schema::dropIfExists('obstetric_tests');
     }
 };
