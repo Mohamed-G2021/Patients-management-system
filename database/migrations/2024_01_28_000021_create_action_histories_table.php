@@ -17,7 +17,7 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->morphs('action');
+            $table->morphs('reference');
             $table->enum('action',['create','update','delete']);
             $table->timestamps();
         });
