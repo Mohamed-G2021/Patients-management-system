@@ -6,18 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class PreEclampsiaTest extends Model
+class GynaecologicalTest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'history_of_pre-eclampsia',
-        'number_of_pregnancies_with_pe',
-        'date_of_pregnancies_with_pe',
-        'fate_of_the_pregnancy',
-        'investigation',
-    ];
+        'date_of_last_period',
+        'menstrual_cycle_abnormalities',
+        'contact_bleeding',
+        'menopause',
+        'menopause_age',
+        'using_of_contraception',
+        'contraception_method',
+        'investigation',  
+      ];
 
     //------------ many to many relationship test with doctor -----------
     public function doctors(): MorphToMany
@@ -34,6 +36,6 @@ class PreEclampsiaTest extends Model
     //------------ many to many relationship test with history test ----------- 
     public function historyTest(): HasMany
     {
-        return $this->hasMany(PreEclampsiaHistoryTest::class, 'test_id','id');
+        return $this->hasMany(GynaecologicalHistoryTest::class, 'test_id','id');
     }
 }
