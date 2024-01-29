@@ -10,8 +10,8 @@ class ActionHistory extends Model
 {
     use HasFactory;
 
-
-    public function doctor(): HasMany
+    //----------- one to many relationship action history with doctore ------------
+    public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
