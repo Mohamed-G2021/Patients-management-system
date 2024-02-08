@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('date_of_birth');
             $table->string('address');
             $table->string('marital_state');
-            $table->string('username');
-            $table->string('password');
             $table->string('relative_name');
             $table->string('relative_phone');
             $table->timestamps();

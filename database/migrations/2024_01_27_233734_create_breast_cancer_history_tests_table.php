@@ -25,6 +25,10 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -22,11 +22,15 @@ return new class extends Migration
             $table->boolean('current_oestrogen_use');
             $table->string('recommendations');
             $table->string('investigation');
-            $table->timestamps();
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

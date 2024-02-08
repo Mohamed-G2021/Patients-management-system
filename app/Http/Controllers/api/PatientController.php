@@ -30,8 +30,6 @@ class PatientController extends Controller
             "date_of_birth"=> "required",
             "address"=> "required",
             "marital_state"=> "required",
-            "username"=> "required",
-            "password" => "required",
             "relative_name"=> "required",
             "relative_phone" => "required"
         ]);
@@ -62,8 +60,6 @@ class PatientController extends Controller
             "date_of_birth"=> "required",
             "address"=> "required",
             "marital_state"=> "required",
-            "username"=> "required",
-            "password" => "required",
             "relative_name"=> "required",
             "relative_phone" => "required"
         ]);

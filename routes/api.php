@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\AdminController;
-use App\Http\Controllers\api\DoctorController;
+use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\GeneralExaminationController;
 use App\Http\Controllers\api\GynaecologicalHistoryTestController;
 use App\Http\Controllers\api\ObstetricHistoryTestController;
@@ -23,16 +23,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('admins',[AdminController::class, 'index']);
-Route::post('admins',[AdminController::class, 'store']);
-Route::post('admins/{id}',[AdminController::class, 'update']);
-Route::delete('admins/{id}',[AdminController::class, 'destroy']);
 
-Route::get('doctors',[DoctorController::class, 'index']);
-Route::get('doctors/{id}',[DoctorController::class, 'show']);
-Route::post('doctors',[DoctorController::class, 'store']);
-Route::post('doctors/{id}',[DoctorController::class, 'update']);
-Route::delete('doctors/{id}',[DoctorController::class, 'destroy']);
+Route::get('doctors',[UserController::class, 'index']);
+Route::get('doctors/{id}',[UserController::class, 'show']);
+Route::post('doctors',[UserController::class, 'store']);
+Route::post('doctors/{id}',[UserController::class, 'update']);
+Route::delete('doctors/{id}',[UserController::class, 'destroy']);
 
 Route::get('patients',[PatientController::class, 'index']);
 Route::get('patients/{id}',[PatientController::class, 'show']);

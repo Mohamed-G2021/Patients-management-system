@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class DoctorController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $doctors = Doctor::all();
+        $doctors = User::where('role', 'doctor')->get();
         return $doctors;
     }
 
@@ -22,14 +22,12 @@ class DoctorController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            "name" => "required",
+        $request->validate([
             "password" => "required",
-            "email"=> "required",
-            "phone_number" => "required"
+            "email"=> "required|unique:users,email",
         ]);
     
-        $doctor = Doctor::create($data);
+        $doctor = User::create($request->all());
     
         return response()->json(['message' => 'Doctor has been saved successfully', 'doctor' => $doctor], 200);
     }
@@ -39,7 +37,7 @@ class DoctorController extends Controller
      */
     public function show(string $id)
     {
-        $doctor =Doctor::find($id);
+        $doctor =User::find($id);
         return $doctor;
     }
 
@@ -49,13 +47,11 @@ class DoctorController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-            "name" => "required",
             "password" => "required",
-            "email"=> "required",
-            "phone_number" => "required"
+            "email"=> "required|unique:users,email",
         ]);
 
-        $doctor = Doctor::find($id);
+        $doctor = User::find($id);
         $doctor->update($data);
 
         return response()->json(['message' => 'Doctor has been updated successfully', 'doctor' => $doctor], 200);
@@ -66,7 +62,7 @@ class DoctorController extends Controller
      */
     public function destroy(string $id)
     {
-        $doctor=Doctor::find($id);
+        $doctor=User::find($id);
         $doctor->delete();
         return response()->json(['doctor has been deleted successfully']);
     }

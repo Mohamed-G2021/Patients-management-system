@@ -39,7 +39,7 @@ class GeneralExaminationController extends Controller
 
                 $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
                 }
-                $data['investigationFiles'] = json_encode($filesNames);
+                $data['investigationFiles'] = $filesNames;
 
             }
 
