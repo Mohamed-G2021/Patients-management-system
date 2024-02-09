@@ -20,7 +20,15 @@ class CervixCancerTestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'hpv_vaccine' => 'required|boolean',
+            'via_test_result' => 'required|string',
+            'via_test_comment' => 'nullable|string',
+            'pap_smear_result' => 'required|string',
+            'pap_smear_comment' => 'nullable|string',
+            'investigation_files' => 'nullable|string',
+        ]);
     }
 
     /**

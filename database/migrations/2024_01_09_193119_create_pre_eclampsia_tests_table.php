@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('pre_eclampsia_tests', function (Blueprint $table) {
             $table->id();
-            $table->boolean('history_of_pre-eclampsia');
-            $table->integer('number_of_pregnancies_with_pe');
-            $table->string('date_of_pregnancies_with_pe');
-            $table->string('fate_of_the_pregnancy');
-            $table->string('investigation');
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->boolean('history_of_pre-eclampsia');
+            $table->integer('number_of_pregnancies_with_pe');
+            $table->string('date_of_pregnancies_with_pe');
+            $table->string('fate_of_the_pregnancy');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
 
         });

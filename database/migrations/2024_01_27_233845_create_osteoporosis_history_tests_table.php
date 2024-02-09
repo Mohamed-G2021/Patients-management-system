@@ -17,11 +17,6 @@ return new class extends Migration
             ->constrained('osteoporosis_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('age');
-            $table->float('weight');
-            $table->boolean('current_oestrogen_use');
-            $table->string('recommendations');
-            $table->string('investigation');
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
@@ -30,6 +25,11 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->integer('age');
+            $table->float('weight');
+            $table->boolean('current_oestrogen_use');
+            $table->string('recommendations');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

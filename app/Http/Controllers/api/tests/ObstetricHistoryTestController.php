@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\ObstetricHistoryTest;
+use App\Models\ObstetricTest;
 use Illuminate\Http\Request;
 
 class ObstetricHistoryTestController extends Controller
@@ -22,29 +22,34 @@ class ObstetricHistoryTestController extends Controller
     public function store(Request $request)
     {
         $data=$request->validate([
+            'patient_id' =>'required|exists:patients,id',
             "gravidity"=> "required",
             "parity"=> "required",
             "abortion"=> "required",
-            "notes"=> "required",
-            'investigation' => 'required|file|mimes:pdf,doc,docx', 
-         
+            "notes"=> "nullable",
+            'investigation_files' => 'nullable',
+            'investigation_files.*'=>'nullable|file',         
         ]);
-        $investigationFile=$request->file('investigation');
-        $investigationFileName= $investigationFile->getClientOriginalName();
 
-        $data['investigation']=   $investigationFileName;
-       $obstetric= ObstetricHistoryTest::create($data);
-      
-       $investigationFile->storeAs('obstetrichistorytestinvestigations', $investigationFileName, 'public');
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = implode(',', $filesNames);
+        }
     
+        $data['investigation']=   $investigationFileName;
+        $obstetric= ObstetricTest::create($data);
+      
        return response()->json([
            'message' => 'Obstetric History Test has been saved successfully',
            'obstetric' => $obstetric,
-           'original_investigation_name' => $investigationFileName,
        ], 201);
-   
-
-
     }
 
     /**

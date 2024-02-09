@@ -12,11 +12,12 @@ class ObstetricTest extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'patient_id',
         'gravidity',
         'parity',
         'abortion',
         'notes',
-        'investigation',   
+        'investigation_files',   
        ] ;
 
     //------------ many to many relationship test with doctor -----------

@@ -12,11 +12,12 @@ class PreEclampsiaTest extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'patient_id',
         'history_of_pre-eclampsia',
         'number_of_pregnancies_with_pe',
         'date_of_pregnancies_with_pe',
         'fate_of_the_pregnancy',
-        'investigation',
+        'investigation_files',
     ];
 
     //------------ many to many relationship test with doctor -----------

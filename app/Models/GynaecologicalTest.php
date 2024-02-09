@@ -11,6 +11,7 @@ class GynaecologicalTest extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'patient_id',
         'date_of_last_period',
         'menstrual_cycle_abnormalities',
         'contact_bleeding',
@@ -18,7 +19,7 @@ class GynaecologicalTest extends Model
         'menopause_age',
         'using_of_contraception',
         'contraception_method',
-        'investigation',  
+        'investigation_files',  
       ];
 
     //------------ many to many relationship test with doctor -----------

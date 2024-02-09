@@ -17,13 +17,6 @@ return new class extends Migration
             ->constrained('cervix_cancer_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('hpv_vaccine');
-            $table->string('via_test_result');
-            $table->string('via_test_comment')->nullable();
-            $table->string('pap_smear_result');
-            $table->string('pap_smear_comment')->nullable();
-            $table->string('recommendations');
-            $table->string('investigation');
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
@@ -32,6 +25,13 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->boolean('hpv_vaccine');
+            $table->string('via_test_result');
+            $table->string('via_test_comment')->nullable();
+            $table->string('pap_smear_result');
+            $table->string('pap_smear_comment')->nullable();
+            $table->string('recommendations');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

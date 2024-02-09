@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('osteoporosis_tests', function (Blueprint $table) {
             $table->id();
-            $table->integer('age');
-            $table->float('weight');
-            $table->boolean('current_oestrogen_use');
-            $table->string('recommendations');
-            $table->string('investigation');
-            $table->timestamps();
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->integer('age');
+            $table->float('weight');
+            $table->boolean('current_oestrogen_use');
+            $table->string('recommendations');
+            $table->string('investigation_files')->nullable();
+            $table->timestamps();
         });
     }
 

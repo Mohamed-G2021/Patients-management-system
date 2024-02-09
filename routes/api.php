@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\api\AdminController;
+use App\Http\Controllers\api\tests\OvarianCancerTestController;
+use App\Http\Controllers\api\tests\PreEclampsiaTestController;
+use App\Http\Controllers\api\tests\UterineCancerTestController;
 use App\Http\Controllers\api\UserController;
-use App\Http\Controllers\api\GeneralExaminationController;
-use App\Http\Controllers\api\GynaecologicalHistoryTestController;
-use App\Http\Controllers\api\ObstetricHistoryTestController;
+use App\Http\Controllers\api\tests\GeneralExaminationController;
+use App\Http\Controllers\api\tests\GynaecologicalHistoryTestController;
+use App\Http\Controllers\api\tests\ObstetricHistoryTestController;
 use App\Http\Controllers\api\PatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,3 +42,8 @@ Route::delete('patients/{id}',[PatientController::class, 'destroy']);
 Route::resource('general-examination', GeneralExaminationController::class);
 Route::resource('obstetrics',ObstetricHistoryTestController::class);
 Route::resource('gynaecological',GynaecologicalHistoryTestController::class);
+Route::resource('obsteoporosis',ObstetricHistoryTestController::class);
+Route::resource('ovarian',OvarianCancerTestController::class);
+Route::resource('pre-eclampsia',PreEclampsiaTestController::class);
+Route::resource('uterine',UterineCancerTestController::class);
+

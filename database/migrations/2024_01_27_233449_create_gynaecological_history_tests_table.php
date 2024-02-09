@@ -17,14 +17,6 @@ return new class extends Migration
             ->constrained('gynaecological_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('date_of_last_period');
-            $table->string('menstrual_cycle_abnormalities');
-            $table->boolean('contact_bleeding');
-            $table->boolean('menopause')->nullable();
-            $table->integer('menopause_age')->nullable();
-            $table->boolean('using_of_contraception')->nullable();
-            $table->enum('contraception_method',['Pills','IUD','Injectable','Other'])->nullable();
-            $table->string('investigation')->nullable();
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
@@ -33,6 +25,14 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->string('date_of_last_period');
+            $table->string('menstrual_cycle_abnormalities');
+            $table->boolean('contact_bleeding');
+            $table->boolean('menopause')->nullable();
+            $table->integer('menopause_age')->nullable();
+            $table->boolean('using_of_contraception')->nullable();
+            $table->enum('contraception_method',['Pills','IUD','Injectable','Other'])->nullable();
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

@@ -12,11 +12,12 @@ class OsteoporosisTest extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'patient_id',
         'age',
         'weight',
         'current_oestrogen_use',
         'recommendations',
-        'investigation',
+        'investigation_files',
     ] ;
 
     //------------ many to many relationship test with doctor -----------

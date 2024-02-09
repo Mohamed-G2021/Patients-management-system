@@ -17,6 +17,14 @@ return new class extends Migration
             ->constrained('uterine_cancer_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('lynch_syndrome');
             $table->boolean('irregular_bleeding');
             $table->string('tvs_perimetrium_result');
@@ -27,15 +35,7 @@ return new class extends Migration
             $table->string('tvs_perimetrium_comment');
             $table->string('tvs_myometrium_comment');
             $table->string('tvs_endometrium_comment');
-            $table->string('investigation');
-            $table->foreignId('patient_id')
-            ->constrained('patients')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-            $table->foreignId('doctor_id')
-            ->constrained('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

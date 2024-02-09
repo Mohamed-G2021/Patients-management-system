@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('breast_cancer_tests', function (Blueprint $table) {
             $table->id();
-            $table->integer('age');
-            $table->string('family_history');
-            $table->string('recommendations');
-            $table->string('investigation')->nullable();
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->integer('age');
+            $table->string('family_history');
+            $table->string('recommendations');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

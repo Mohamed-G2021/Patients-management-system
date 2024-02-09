@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\GynaecologicalHistoryTest;
+use App\Models\GynaecologicalTest;
 use Illuminate\Http\Request;
 
 class GynaecologicalHistoryTestController extends Controller
@@ -22,6 +22,7 @@ class GynaecologicalHistoryTestController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'patient_id' =>'required|exists:patients,id',
             'date_of_last_period' => 'required|date',
             'menstrual_cycle_abnormalities' => 'required|string',
             'contact_bleeding' => 'required|boolean',
@@ -29,22 +30,30 @@ class GynaecologicalHistoryTestController extends Controller
             'menopause_age' => 'nullable|required_if:menopause,yes|integer',
             'using_of_contraception' => 'required|boolean',
             'contraception_method' => 'nullable|required_if:using_of_contraception,yes|string|in:Pills,IUD,Injectable,Other',
-            'investigation' => 'nullable|file|mimes:pdf,doc,docx', 
+            'investigation_files' => 'nullable',
+            'investigation_files.*'=>'nullable|file',
             ]);
-            if (!$data['menopause']) {
-                $data['menopause_age'] = null;
-            }
-            if (!$data['using_of_contraception']) {
-                $data['contraception_method'] = null;
-            }
-            $investigationFile = $request->file('investigation');
-            $investigationFileName = $investigationFile->getClientOriginalName();
     
-            $data['investigation'] = $investigationFileName;
+        if (!$data['menopause']) {
+            $data['menopause_age'] = null;
+        }
+        if (!$data['using_of_contraception']) {
+            $data['contraception_method'] = null;
+        }
         
-            $historyTest = GynaecologicalHistoryTest::create($data);
-            $investigationFile->storeAs('gynaecologicalhistorytestinvestigations', $investigationFileName, 'public');
-    
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('gynaecological_history_test_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = implode(',', $filesNames);
+        }
+        $historyTest = GynaecologicalTest::create($data);
+        
         return response()->json([
             'message' => 'Gynaecological history test has been saved successfully',
             'history_test' => $historyTest,
@@ -74,7 +83,8 @@ class GynaecologicalHistoryTestController extends Controller
             'menopause_age' => 'nullable|required_if:menopause,yes|integer',
             'using_of_contraception' => 'required|boolean',
             'contraception_method' => 'nullable|required_if:using_of_contraception,yes|string|in:Pills,IUD,Injectable,Other',
-            'investigation' => 'nullable|file|mimes:pdf,doc,docx', 
+            'investigation_files' => 'nullable',
+            'investigation_files.*'=>'nullable|file',
         ]);
 
         if (!$data['menopause']) {
@@ -83,7 +93,20 @@ class GynaecologicalHistoryTestController extends Controller
         if (!$data['using_of_contraception']) {
             $data['contraception_method'] = null;
         }
-        $historyTest = GynaecologicalHistoryTest::find($id);
+        
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('gynaecological_history_test_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = implode(',', $filesNames);
+        }
+
+        $historyTest = GynaecologicalTest::find($id);
         $historyTest->update($data);
 
         return response()->json([

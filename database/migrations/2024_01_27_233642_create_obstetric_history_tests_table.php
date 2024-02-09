@@ -17,11 +17,6 @@ return new class extends Migration
             ->constrained('obstetric_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('gravidity');
-            $table->integer('parity');
-            $table->integer('abortion');
-            $table->string('notes');
-            $table->string('investigation')->nullable();   
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
@@ -30,6 +25,11 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->integer('gravidity');
+            $table->integer('parity');
+            $table->integer('abortion');
+            $table->string('notes');
+            $table->string('investigation_files')->nullable();   
             $table->timestamps();
         });
     }

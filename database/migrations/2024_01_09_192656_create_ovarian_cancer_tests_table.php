@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('ovarian_cancer_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('breast_cancer_history');
             $table->boolean('relatives_with_ovarian_cancer');
             $table->boolean('gene_mutation_or_lynch_syndrome');
@@ -21,10 +25,6 @@ return new class extends Migration
             $table->string('ca-125_result');
             $table->string('ca-125_comment');
             $table->string('recommendations');
-            $table->foreignId('patient_id')
-            ->constrained('patients')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
             $table->timestamps();
         });
     }

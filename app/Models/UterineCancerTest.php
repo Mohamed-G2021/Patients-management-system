@@ -12,6 +12,7 @@ class UterineCancerTest extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'patient_id',
         'lynch_syndrome(+ve,-ve)',
         'irregular_bleeding',
         'tvs_perimetrium_result',
@@ -22,7 +23,7 @@ class UterineCancerTest extends Model
         'tvs_perimetrium_comment',
         'tvs_myometrium_comment',
         'tvs_endometrium_comment',
-        'investigation',
+        'investigation_files',
     ];
 
     //------------ many to many relationship test with doctor -----------

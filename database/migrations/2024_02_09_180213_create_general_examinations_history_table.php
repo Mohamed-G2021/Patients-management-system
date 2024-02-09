@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ovarian_cancer_history_tests', function (Blueprint $table) {
+        Schema::create('general_examinations_history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('test_id')
-            ->constrained('ovarian_cancer_tests')
+            ->constrained('general_examination_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->foreignId('patient_id')
@@ -25,14 +25,12 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('breast_cancer_history');
-            $table->boolean('relatives_with_ovarian_cancer');
-            $table->boolean('gene_mutation_or_lynch_syndrome');
-            $table->string('tvs_result');
-            $table->string('tvs_comment');
-            $table->string('ca-125_result');
-            $table->string('ca-125_comment');
-            $table->string('recommendations');
+            $table->float('height');
+            $table->integer('pulse');
+            $table->float('weight');
+            $table->float('random_blood_sugar');
+            $table->string('blood_pressure');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }
@@ -42,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ovarian_cancer_history_tests');
+        Schema::dropIfExists('general_examinations_history');
     }
 };

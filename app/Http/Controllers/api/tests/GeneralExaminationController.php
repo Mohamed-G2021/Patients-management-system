@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralExamination;
@@ -22,25 +22,26 @@ class GeneralExaminationController extends Controller
     public function store(Request $request)
     {
         $data=$request->validate([
+                'patient_id' =>'required|exists:patients,id',
                 'height' => 'required',
                 'pulse' => 'required',
                 'weight' => 'required',
                 'random_blood_sugar' => 'required',
                 'blood_pressure' => 'required',
-                'investigationFiles' => 'nullable',
-                'investigationFiles.*'=>'nullable|file',
+                'investigation_files' => 'nullable',
+                'investigation_files.*'=>'nullable|file',
             ]);
 
-            if($request->hasfile('investigationFiles')){
+            if($request->hasfile('investigation_files')){
                 $filesNames = [];
-                foreach($request->file('investigationFiles')  as $investigationFile){
+                foreach($request->file('investigation_files')  as $investigationFile){
                 $investigationFileName = $investigationFile->getClientOriginalName();
                 $filesNames[]=$investigationFileName;
 
                 $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
                 }
-                $data['investigationFiles'] = $filesNames;
-
+                
+                $data['investigation_files'] = implode(',', $filesNames);
             }
 
             $examination = GeneralExamination::create($data);
@@ -64,24 +65,31 @@ class GeneralExaminationController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
+            'patient_id' =>'required',
             'height' => 'required',
             'pulse' => 'required',
             'weight' => 'required',
             'random_blood_sugar' => 'required',
             'blood_pressure' => 'required',
-            'investigation' => 'nullable|file|mimes:pdf,doc,docx',
+            'investigationFiles' => 'nullable',
+            'investigationFiles.*'=>'nullable|file',
         ]);
 
         $examination = GeneralExamination::find($id);
-        $examination->update($data);
+        
+        if($request->hasfile('investigationFiles')){
+            $filesNames = [];
+            foreach($request->file('investigationFiles')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
 
-        if ($request->hasFile('investigation')) {
-            $newInvestigationFile = $request->file('investigation');
-            $newInvestigationFileName = $newInvestigationFile->getClientOriginalName();
-            $data['investigation'] = $newInvestigationFileName;
-            $examination->update($data);
-            $newInvestigationFile->storeAs('general_examination_investigations', $newInvestigationFileName, 'public');
+            $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigationFiles'] = implode(',', $filesNames);
         }
+
+        $examination->update($data);
 
         return response()->json(['message' => 'General examination has been updated successfully', 'examination' => $examination], 200);
     }

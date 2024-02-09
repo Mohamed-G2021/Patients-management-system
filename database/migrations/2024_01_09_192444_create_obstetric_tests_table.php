@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('obstetric_tests', function (Blueprint $table) {
             $table->id();
-            $table->integer('gravidity');
-            $table->integer('parity');
-            $table->integer('abortion');
-            $table->string('notes');
-            $table->string('investigation')->nullable();   
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->integer('gravidity');
+            $table->integer('parity');
+            $table->integer('abortion');
+            $table->string('notes')->nullable();
+            $table->string('investigation_files')->nullable();   
             $table->timestamps();
         });
     }

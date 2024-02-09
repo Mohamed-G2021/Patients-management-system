@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('uterine_cancer_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('lynch_syndrome');
             $table->boolean('irregular_bleeding');
             $table->string('tvs_perimetrium_result');
@@ -23,11 +27,7 @@ return new class extends Migration
             $table->string('tvs_perimetrium_comment');
             $table->string('tvs_myometrium_comment');
             $table->string('tvs_endometrium_comment');
-            $table->string('investigation');
-            $table->foreignId('patient_id')
-            ->constrained('patients')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

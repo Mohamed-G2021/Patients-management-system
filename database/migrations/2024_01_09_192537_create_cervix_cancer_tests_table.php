@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('cervix_cancer_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('hpv_vaccine');
             $table->string('via_test_result');
             $table->string('via_test_comment')->nullable();
             $table->string('pap_smear_result');
             $table->string('pap_smear_comment')->nullable();
             $table->string('recommendations');
-            $table->string('investigation');
-            $table->foreignId('patient_id')
-            ->constrained('patients')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

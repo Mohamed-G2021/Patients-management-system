@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('gynaecological_tests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')
+            ->constrained('patients')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->string('date_of_last_period');
             $table->string('menstrual_cycle_abnormalities');
             $table->boolean('contact_bleeding');
@@ -20,11 +24,7 @@ return new class extends Migration
             $table->integer('menopause_age')->nullable();
             $table->boolean('using_of_contraception')->nullable();
             $table->enum('contraception_method',['Pills','IUD','Injectable','Other'])->nullable();
-            $table->string('investigation')->nullable();
-            $table->foreignId('patient_id')
-            ->constrained('patients')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }

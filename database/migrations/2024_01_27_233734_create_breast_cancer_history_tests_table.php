@@ -17,10 +17,6 @@ return new class extends Migration
             ->constrained('breast_cancer_tests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('age');
-            $table->string('family_history');
-            $table->string('recommendations');
-            $table->string('investigation')->nullable();
             $table->foreignId('patient_id')
             ->constrained('patients')
             ->onUpdate('cascade')
@@ -29,6 +25,10 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->integer('age');
+            $table->string('family_history');
+            $table->string('recommendations');
+            $table->string('investigation_files')->nullable();
             $table->timestamps();
         });
     }
