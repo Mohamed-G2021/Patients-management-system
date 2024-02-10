@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('national_id');
             $table->string('name');
             $table->string('age');
+            $table->string('phone_number');
+            $table->integer('patient_id')->unique();
             $table->string('date_of_birth');
             $table->string('address');
             $table->string('marital_state');
-            $table->string('username');
-            $table->string('password');
             $table->string('relative_name');
             $table->string('relative_phone');
             $table->timestamps();

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class CervixCancerTestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,15 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'hpv_vaccine' => 'required|boolean',
+            'via_test_result' => 'required|string',
+            'via_test_comment' => 'nullable|string',
+            'pap_smear_result' => 'required|string',
+            'pap_smear_comment' => 'nullable|string',
+            'investigation_files' => 'nullable|string',
+        ]);
     }
 
     /**
