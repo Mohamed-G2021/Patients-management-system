@@ -23,7 +23,7 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            "national_id"=> "required",
+            "national_id"=> "required|unique:patients,national_id|digits:14",
             "name" => "required",
             "age"=>"required",
             "phone_number"=> "required",
@@ -55,7 +55,7 @@ class PatientController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-            "national_id"=> "required",
+            "national_id"=> "required|unique:patients,national_id|digits:14",
             "name" => "required",
             "age"=>"required",
             "phone_number"=> "required",
