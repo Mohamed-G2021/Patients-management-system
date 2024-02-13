@@ -83,9 +83,9 @@ class PatientController extends Controller
         return response()->json(['patient has been deleted successfully']);
     }
 
-    public function Search(string $patient_id)
+    public function Search(string $patient_code)
     {
-        $patient = Patient::where('patient_id',$patient_id)->first();
+        $patient = Patient::where('patient_code',$patient_code)->first();
         return $patient;
     }
 }
