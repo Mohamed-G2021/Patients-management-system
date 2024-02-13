@@ -17,17 +17,17 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('lynch_syndrome');
-            $table->boolean('irregular_bleeding');
-            $table->string('tvs_perimetrium_result');
-            $table->string('tvs_myometrium_result');
-            $table->string('tvs_endometrium_result');
-            $table->string('biopsy_result');
-            $table->string('biopsy_comment');
-            $table->string('tvs_perimetrium_comment');
-            $table->string('tvs_myometrium_comment');
-            $table->string('tvs_endometrium_comment');
-            $table->string('investigation_files')->nullable();
+            $table->boolean('lynch_syndrome')->nullable();
+            $table->boolean('irregular_bleeding')->nullable();
+            $table->string('tvs_perimetrium_result')->nullable();
+            $table->string('tvs_myometrium_result')->nullable();
+            $table->string('tvs_endometrium_result')->nullable();
+            $table->string('biopsy_result')->nullable();
+            $table->string('biopsy_comment')->nullable();
+            $table->string('tvs_perimetrium_comment')->nullable();
+            $table->string('tvs_myometrium_comment')->nullable();
+            $table->string('tvs_endometrium_comment')->nullable();
+            $table->json('investigation_files')->nullable();
             $table->timestamps();
         });
     }

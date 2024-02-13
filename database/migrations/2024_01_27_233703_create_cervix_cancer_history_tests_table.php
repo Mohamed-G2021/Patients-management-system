@@ -25,12 +25,12 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('hpv_vaccine');
-            $table->string('via_test_result');
+            $table->boolean('hpv_vaccine')->nullable();
+            $table->string('via_test_result')->nullable();
             $table->string('via_test_comment')->nullable();
-            $table->string('pap_smear_result');
+            $table->string('pap_smear_result')->nullable();
             $table->string('pap_smear_comment')->nullable();
-            $table->string('recommendations');
+            $table->string('recommendations')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();
         });

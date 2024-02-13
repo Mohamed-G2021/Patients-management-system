@@ -25,10 +25,10 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('age');
-            $table->float('weight');
-            $table->boolean('current_oestrogen_use');
-            $table->string('recommendations');
+            $table->integer('age')->nullable();
+            $table->float('weight')->nullable();
+            $table->boolean('current_oestrogen_use')->nullable();
+            $table->string('recommendations')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();
         });

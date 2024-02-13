@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('national_id');
             $table->string('name');
-            $table->string('age');
+            $table->integer('age');
             $table->string('phone_number');
-            $table->integer('patient_id')->unique();
+            $table->integer('patient_code')->unique();
             $table->string('date_of_birth');
             $table->string('address');
             $table->string('marital_state');

@@ -25,14 +25,14 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('breast_cancer_history');
-            $table->boolean('relatives_with_ovarian_cancer');
-            $table->boolean('gene_mutation_or_lynch_syndrome');
-            $table->string('tvs_result');
-            $table->string('tvs_comment');
-            $table->string('ca-125_result');
-            $table->string('ca-125_comment');
-            $table->string('recommendations');
+            $table->boolean('breast_cancer_history')->nullable();
+            $table->boolean('relatives_with_ovarian_cancer')->nullable();
+            $table->boolean('gene_mutation_or_lynch_syndrome')->nullable();
+            $table->string('tvs_result')->nullable();
+            $table->string('tvs_comment')->nullable();
+            $table->string('ca-125_result')->nullable();
+            $table->string('ca-125_comment')->nullable();
+            $table->string('recommendations')->nullable();
             $table->timestamps();
         });
     }

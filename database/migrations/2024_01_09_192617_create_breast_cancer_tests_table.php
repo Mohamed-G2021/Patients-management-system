@@ -17,10 +17,10 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('age');
-            $table->string('family_history');
-            $table->string('recommendations');
-            $table->string('investigation_files')->nullable();
+            $table->integer('age')->nullable();
+            $table->string('family_history')->nullable();
+            $table->string('recommendations')->nullable();
+            $table->json('investigation_files')->nullable();
             $table->timestamps();
         });
     }
