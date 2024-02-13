@@ -26,8 +26,8 @@ return new class extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->integer('age');
-            $table->string('family_history');
-            $table->string('recommendations');
+            $table->string('family_history')->nullable();
+            $table->string('recommendations')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();
         });

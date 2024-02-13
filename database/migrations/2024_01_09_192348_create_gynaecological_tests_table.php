@@ -17,14 +17,14 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('date_of_last_period');
-            $table->string('menstrual_cycle_abnormalities');
-            $table->boolean('contact_bleeding');
+            $table->string('date_of_last_period')->nullable();
+            $table->string('menstrual_cycle_abnormalities')->nullable();
+            $table->boolean('contact_bleeding')->nullable();
             $table->boolean('menopause')->nullable();
             $table->integer('menopause_age')->nullable();
             $table->boolean('using_of_contraception')->nullable();
             $table->enum('contraception_method',['Pills','IUD','Injectable','Other'])->nullable();
-            $table->string('investigation_files')->nullable();
+            $table->json('investigation_files')->nullable();
             $table->timestamps();
         });
     }

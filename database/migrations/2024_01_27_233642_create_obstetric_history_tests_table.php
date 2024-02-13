@@ -25,10 +25,10 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('gravidity');
-            $table->integer('parity');
-            $table->integer('abortion');
-            $table->string('notes');
+            $table->integer('gravidity')->nullable();
+            $table->integer('parity')->nullable();
+            $table->integer('abortion')->nullable();
+            $table->string('notes')->nullable();
             $table->string('investigation_files')->nullable();   
             $table->timestamps();
         });

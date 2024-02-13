@@ -17,11 +17,11 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('age');
-            $table->float('weight');
-            $table->boolean('current_oestrogen_use');
-            $table->string('recommendations');
-            $table->string('investigation_files')->nullable();
+            $table->integer('age')->nullable();
+            $table->float('weight')->nullable();
+            $table->boolean('current_oestrogen_use')->nullable();
+            $table->string('recommendations')->nullable();
+            $table->json('investigation_files')->nullable();
             $table->timestamps();
         });
     }

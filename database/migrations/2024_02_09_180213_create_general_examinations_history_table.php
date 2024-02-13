@@ -25,11 +25,11 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->float('height');
-            $table->integer('pulse');
-            $table->float('weight');
-            $table->float('random_blood_sugar');
-            $table->string('blood_pressure');
+            $table->float('height')->nullable();
+            $table->integer('pulse')->nullable();
+            $table->float('weight')->nullable();
+            $table->float('random_blood_sugar')->nullable();
+            $table->string('blood_pressure')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();
         });

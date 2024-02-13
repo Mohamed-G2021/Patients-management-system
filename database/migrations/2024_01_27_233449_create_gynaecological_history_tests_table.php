@@ -25,9 +25,9 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('date_of_last_period');
-            $table->string('menstrual_cycle_abnormalities');
-            $table->boolean('contact_bleeding');
+            $table->string('date_of_last_period')->nullable();
+            $table->string('menstrual_cycle_abnormalities')->nullable();
+            $table->boolean('contact_bleeding')->nullable();
             $table->boolean('menopause')->nullable();
             $table->integer('menopause_age')->nullable();
             $table->boolean('using_of_contraception')->nullable();

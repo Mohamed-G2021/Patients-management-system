@@ -28,12 +28,14 @@ class PatientController extends Controller
             "age"=>"required",
             "phone_number"=> "required",
             "date_of_birth"=> "required",
-            "address"=> "required",
-            "marital_state"=> "required",
-            "relative_name"=> "required",
-            "relative_phone" => "required"
+            "marital_state"=> "required",            
         ]);
-        $data['patient_id']=random_int(10000, 99999);
+        
+        $data['address'] = $request->address;
+        $data['relative_name'] = $request->relative_name;
+        $data['relative_phone'] = $request->relative_phone;
+        $data['patient_code']=random_int(10000, 99999);
+
         $patient = Patient::create($data);
         return response()->json(['message' => 'Patient has been saved successfully', 'patient' => $patient], 200);
     }
@@ -58,11 +60,12 @@ class PatientController extends Controller
             "age"=>"required",
             "phone_number"=> "required",
             "date_of_birth"=> "required",
-            "address"=> "required",
             "marital_state"=> "required",
-            "relative_name"=> "required",
-            "relative_phone" => "required"
         ]);
+        
+        $data['address'] = $request->address;
+        $data['relative_name'] = $request->relative_name;
+        $data['relative_phone'] = $request->relative_phone;
 
         $patient = Patient::find($id);
         $patient->update($data);

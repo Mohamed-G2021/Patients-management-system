@@ -25,10 +25,10 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('history_of_pre-eclampsia');
-            $table->integer('number_of_pregnancies_with_pe');
-            $table->string('date_of_pregnancies_with_pe');
-            $table->string('fate_of_the_pregnancy');
+            $table->boolean('history_of_pre-eclampsia')->nullable();
+            $table->integer('number_of_pregnancies_with_pe')->nullable();
+            $table->string('date_of_pregnancies_with_pe')->nullable();
+            $table->string('fate_of_the_pregnancy')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();
         });

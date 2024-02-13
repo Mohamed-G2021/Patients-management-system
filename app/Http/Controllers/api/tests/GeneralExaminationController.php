@@ -23,32 +23,33 @@ class GeneralExaminationController extends Controller
     {
         $data=$request->validate([
                 'patient_id' =>'required|exists:patients,id',
-                'height' => 'required',
-                'pulse' => 'required',
-                'weight' => 'required',
-                'random_blood_sugar' => 'required',
-                'blood_pressure' => 'required',
                 'investigation_files' => 'nullable',
                 'investigation_files.*'=>'nullable|file',
             ]);
 
-            if($request->hasfile('investigation_files')){
-                $filesNames = [];
-                foreach($request->file('investigation_files')  as $investigationFile){
-                $investigationFileName = $investigationFile->getClientOriginalName();
-                $filesNames[]=$investigationFileName;
+        $data['height'] = $request->height;
+        $data['pulse'] = $request->pulse;
+        $data['weight'] = $request->weight;
+        $data['random_blood_sugar'] = $request->random_blood_sugar;
+        $data['blood_pressure'] = $request->blood_pressure;
 
-                $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
-                }
-                
-                $data['investigation_files'] = implode(',', $filesNames);
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
             }
+            
+            $data['investigation_files'] = json_encode($filesNames);
+        }
 
-            $examination = GeneralExamination::create($data);
+        $examination = GeneralExamination::create($data);
 
-            return response()->json([
-                'message' => 'General examination has been saved successfully',
-                'examination' => $examination], 201);
+        return response()->json([
+            'message' => 'General examination has been saved successfully',
+            'examination' => $examination], 201);
 
     }
     /**
@@ -65,30 +66,31 @@ class GeneralExaminationController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-            'patient_id' =>'required',
-            'height' => 'required',
-            'pulse' => 'required',
-            'weight' => 'required',
-            'random_blood_sugar' => 'required',
-            'blood_pressure' => 'required',
-            'investigationFiles' => 'nullable',
-            'investigationFiles.*'=>'nullable|file',
+            'patient_id' =>'required|exists:patients,id',
+            'investigation_files' => 'nullable',
+            'investigation_files.*'=>'nullable|file',
         ]);
 
-        $examination = GeneralExamination::find($id);
+        $data['height'] = $request->height;
+        $data['pulse'] = $request->pulse;
+        $data['weight'] = $request->weight;
+        $data['random_blood_sugar'] = $request->random_blood_sugar;
+        $data['blood_pressure'] = $request->blood_pressure;
         
-        if($request->hasfile('investigationFiles')){
+        if($request->hasfile('investigation_files')){
             $filesNames = [];
-            foreach($request->file('investigationFiles')  as $investigationFile){
+            foreach($request->file('investigation_files')  as $investigationFile){
             $investigationFileName = $investigationFile->getClientOriginalName();
             $filesNames[]=$investigationFileName;
 
             $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigationFiles'] = implode(',', $filesNames);
+            $data['investigation_files'] = json_encode($filesNames);
+
         }
 
+        $examination = GeneralExamination::find($id);
         $examination->update($data);
 
         return response()->json(['message' => 'General examination has been updated successfully', 'examination' => $examination], 200);
