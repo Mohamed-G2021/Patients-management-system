@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('phone_number');
             $table->integer('patient_code')->unique();
             $table->string('date_of_birth');
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('marital_state');
-            $table->string('relative_name');
-            $table->string('relative_phone');
+            $table->string('relative_name')->nullable();
+            $table->string('relative_phone')->nullable();
             $table->timestamps();
         });
     }
