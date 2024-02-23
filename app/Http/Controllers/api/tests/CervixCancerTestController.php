@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
+use App\Models\CervixCancerTest;
 use Illuminate\Http\Request;
 
 class CervixCancerTestController extends Controller
@@ -22,13 +23,34 @@ class CervixCancerTestController extends Controller
     {
         $data = $request->validate([
             'patient_id' => 'required|exists:patients,id',
-            'hpv_vaccine' => 'required|boolean',
-            'via_test_result' => 'required|string',
-            'via_test_comment' => 'nullable|string',
-            'pap_smear_result' => 'required|string',
-            'pap_smear_comment' => 'nullable|string',
-            'investigation_files' => 'nullable|string',
+            'hpv_vaccine' => 'boolean|nullable',
+            'via_test_result' => 'string|nullable',
+            'via_test_comment' => 'string|nullable',
+            'pap_smear_result' => 'string|nullable',
+            'pap_smear_comment' => 'string|nullable',
+            'recommendations' => 'string|nullable',
+            'investigation_files' => 'nullable',
+            'investigation_files.*'=>'nullable|file',
         ]);
+
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('cervix_cancer_test_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = json_encode($filesNames);
+        }
+
+        $examination = CervixCancerTest::create($data);
+
+        return response()->json([
+            'message' => 'Cervix cancer test has been saved successfully',
+            'examination' => $examination], 201);
+
     }
 
     /**
@@ -36,7 +58,9 @@ class CervixCancerTestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $examination = CervixCancerTest::find($id);
+
+        return $examination;
     }
 
     /**

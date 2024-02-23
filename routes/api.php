@@ -7,6 +7,7 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\tests\GeneralExaminationController;
 use App\Http\Controllers\api\tests\GynaecologicalHistoryTestController;
 use App\Http\Controllers\api\tests\ObstetricHistoryTestController;
+use App\Http\Controllers\api\tests\CervixCancerTestController;
 use App\Http\Controllers\api\PatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,21 +27,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('doctors',[UserController::class, 'index']);
-Route::get('doctors/{id}',[UserController::class, 'show']);
-Route::post('doctors',[UserController::class, 'store']);
-Route::post('doctors/{id}',[UserController::class, 'update']);
-Route::delete('doctors/{id}',[UserController::class, 'destroy']);
+Route::resource('doctors', UserController::class);
 
-Route::get('patients',[PatientController::class, 'index']);
-Route::get('patients/{id}',[PatientController::class, 'show']);
-Route::post('patients',[PatientController::class, 'store']);
+Route::resource('patients', PatientController::class);
 Route::get('patients/search/{patient_code}',[PatientController::class,'search']);
-Route::post('patients/{id}',[PatientController::class, 'update']);
-Route::delete('patients/{id}',[PatientController::class, 'destroy']);
 
 Route::resource('general-examination', GeneralExaminationController::class);
 Route::resource('obstetrics',ObstetricHistoryTestController::class);
+Route::resource('cervix',CervixCancerTestController::class);
 Route::resource('gynaecological',GynaecologicalHistoryTestController::class);
 Route::resource('obsteoporosis',ObstetricHistoryTestController::class);
 Route::resource('ovarian',OvarianCancerTestController::class);

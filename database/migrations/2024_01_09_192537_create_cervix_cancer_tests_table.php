@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('hpv_vaccine')->nullable();
             $table->string('via_test_result')->nullable();
             $table->string('via_test_comment')->nullable();
-            $table->string('pap_smear_result');
+            $table->string('pap_smear_result')->nullable();
             $table->string('pap_smear_comment')->nullable();
             $table->string('recommendations')->nullable();
             $table->json('investigation_files')->nullable();

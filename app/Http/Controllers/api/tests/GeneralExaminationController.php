@@ -57,7 +57,9 @@ class GeneralExaminationController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $examination = GeneralExamination::find($id);
+
+        return $examination;
     }
 
     /**

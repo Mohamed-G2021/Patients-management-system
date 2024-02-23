@@ -12,6 +12,17 @@ class CervixCancerTest extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'patient_id',
+        'hpv_vaccine',
+        'via_test_result',
+        'via_test_comment',
+        'pap_smear_result',
+        'pap_smear_comment',
+        'recommendations',
+        'investigation_files'
+    ];
+
    //------------ many to many relationship test with doctor -----------
    public function doctors(): MorphToMany
    {
