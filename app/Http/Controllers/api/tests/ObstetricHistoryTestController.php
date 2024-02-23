@@ -23,10 +23,10 @@ class ObstetricHistoryTestController extends Controller
     {
         $data=$request->validate([
             'patient_id' =>'required|exists:patients,id',
-            "gravidity"=> "required",
-            "parity"=> "required",
-            "abortion"=> "required",
-            "notes"=> "nullable",
+            "gravidity"=> "nullable|integer",
+            "parity"=> "nullable|integer",
+            "abortion"=> "nullable|integer",
+            "notes"=> "nullable|string",
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',         
         ]);
@@ -40,10 +40,9 @@ class ObstetricHistoryTestController extends Controller
             $investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigation_files'] = implode(',', $filesNames);
+            $data['investigation_files'] = json_encode($filesNames);
         }
     
-        $data['investigation']=   $investigationFileName;
         $obstetric= ObstetricTest::create($data);
       
        return response()->json([
@@ -57,7 +56,9 @@ class ObstetricHistoryTestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $examination = ObstetricTest::find($id);
+
+        return $examination;
     }
 
     /**

@@ -12,6 +12,14 @@ class BreastCancerTest extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'patient_id',
+        'age',
+        'family_history',
+        'recommendations',
+        'investigation_files'
+    ];
+
     //------------ many to many relationship test with doctor -----------
     public function doctors(): MorphToMany
     {

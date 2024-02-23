@@ -23,18 +23,16 @@ class GynaecologicalHistoryTestController extends Controller
     {
         $data = $request->validate([
             'patient_id' =>'required|exists:patients,id',
-            'date_of_last_period' => 'date',
-            'menstrual_cycle_abnormalities' => 'string',
-            'contact_bleeding' => 'boolean',
-            'menopause' => 'boolean',
+            'date_of_last_period' => 'date|nullable',
+            'menstrual_cycle_abnormalities' => 'string|nullable',
+            'contact_bleeding' => 'boolean|nullable',
+            'menopause' => 'boolean|nullable',
             'menopause_age' => 'nullable|required_if:menopause,yes|integer',
-            'using_of_contraception' => 'boolean',
+            'using_of_contraception' => 'boolean|nullable',
             'contraception_method' => 'nullable|required_if:using_of_contraception,yes|string|in:Pills,IUD,Injectable,Other',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
             ]);
-        
-
         
         if (!$data['menopause']) {
             $data['menopause_age'] = null;
@@ -54,6 +52,7 @@ class GynaecologicalHistoryTestController extends Controller
             
             $data['investigation_files'] = json_encode($filesNames);
         }
+        
         $historyTest = GynaecologicalTest::create($data);
         
         return response()->json([
@@ -68,7 +67,9 @@ class GynaecologicalHistoryTestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $examination = GynaecologicalTest::find($id);
+
+        return $examination;
     }
 
     /**
@@ -79,12 +80,12 @@ class GynaecologicalHistoryTestController extends Controller
      
         $data = $request->validate([
             'patient_id' =>'required|exists:patients,id',
-            'date_of_last_period' => 'required|date',
-            'menstrual_cycle_abnormalities' => 'required|string',
-            'contact_bleeding' => 'required|boolean',
-            'menopause' => 'required|boolean',
+            'date_of_last_period' => 'date',
+            'menstrual_cycle_abnormalities' => 'string',
+            'contact_bleeding' => 'boolean',
+            'menopause' => 'boolean',
             'menopause_age' => 'nullable|required_if:menopause,yes|integer',
-            'using_of_contraception' => 'required|boolean',
+            'using_of_contraception' => 'boolean',
             'contraception_method' => 'nullable|required_if:using_of_contraception,yes|string|in:Pills,IUD,Injectable,Other',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
