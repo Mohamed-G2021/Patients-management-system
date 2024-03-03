@@ -38,7 +38,12 @@ class UserController extends Controller
     public function show(string $id)
     {
         $doctor =User::find($id);
-        return $doctor;
+        
+        if($doctor){
+            return response()->json($doctor);  
+        }else{
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
     }
 
     /**

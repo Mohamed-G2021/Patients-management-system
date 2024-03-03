@@ -58,7 +58,11 @@ class ObstetricHistoryTestController extends Controller
     {
         $examination = ObstetricTest::find($id);
 
-        return $examination;
+        if($examination){
+            return response()->json($examination);  
+        }else{
+            return response()->json(['error' => 'Examination not found'], 404);
+        }
     }
 
     /**

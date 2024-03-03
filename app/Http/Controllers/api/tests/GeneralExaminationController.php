@@ -59,7 +59,11 @@ class GeneralExaminationController extends Controller
     {
         $examination = GeneralExamination::find($id);
 
-        return $examination;
+        if($examination){
+            return response()->json($examination);  
+        }else{
+            return response()->json(['error' => 'Examination not found'], 404);
+        }
     }
 
     /**
