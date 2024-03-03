@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('tvs_comment')->nullable();
             $table->string('ca-125_result')->nullable();
             $table->string('ca-125_comment')->nullable();
-            $table->json('recommendations')->nullable();
+            $table->string('recommendations')->nullable();
             $table->timestamps();
         });
     }
