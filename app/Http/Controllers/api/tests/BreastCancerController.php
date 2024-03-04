@@ -29,6 +29,20 @@ class BreastCancerController extends Controller
             'investigation_files.*'=>'nullable|file',
         ]);
 
+        $points = 0;
+
+        if($data['age'] <= 25){
+            $points += 1;
+        }elseif($data['age'] >= 26 && $data['age'] <= 39){
+            $points += 2;
+        }elseif($data['age'] >= 40 && $data['age'] <= 49){
+            $points += 3;
+        }elseif($data['age'] >= 50 && $data['age'] <= 70){
+            $points += 4;
+        }elseif($data['age'] >= 80){
+            $points += 3;
+        }
+
         if($request->hasfile('investigation_files')){
             $filesNames = [];
             foreach($request->file('investigation_files')  as $investigationFile){
