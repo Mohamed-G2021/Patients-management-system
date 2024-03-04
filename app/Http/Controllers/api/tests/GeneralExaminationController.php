@@ -23,15 +23,14 @@ class GeneralExaminationController extends Controller
     {
         $data=$request->validate([
                 'patient_id' =>'required|exists:patients,id',
+                'height' => 'numeric|nullable',
+                'weight'=> 'numeric|nullable',
+                'pulse' => 'numeric|nullable',
+                'random_blood_sugar' => 'numeric|nullable',
+                'blood_pressure'=> 'string|nullable',
                 'investigation_files' => 'nullable',
                 'investigation_files.*'=>'nullable|file',
             ]);
-
-        $data['height'] = $request->height;
-        $data['pulse'] = $request->pulse;
-        $data['weight'] = $request->weight;
-        $data['random_blood_sugar'] = $request->random_blood_sugar;
-        $data['blood_pressure'] = $request->blood_pressure;
 
         if($request->hasfile('investigation_files')){
             $filesNames = [];
@@ -59,7 +58,11 @@ class GeneralExaminationController extends Controller
     {
         $examination = GeneralExamination::find($id);
 
-        return $examination;
+        if($examination){
+            return response()->json($examination);  
+        }else{
+            return response()->json(['error' => 'Examination not found'], 404);
+        }
     }
 
     /**
@@ -67,17 +70,16 @@ class GeneralExaminationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'patient_id' =>'required|exists:patients,id',
-            'investigation_files' => 'nullable',
-            'investigation_files.*'=>'nullable|file',
-        ]);
-
-        $data['height'] = $request->height;
-        $data['pulse'] = $request->pulse;
-        $data['weight'] = $request->weight;
-        $data['random_blood_sugar'] = $request->random_blood_sugar;
-        $data['blood_pressure'] = $request->blood_pressure;
+        $data=$request->validate([
+                'patient_id' =>'required|exists:patients,id',
+                'height' => 'numeric|nullable',
+                'weight'=> 'numeric|nullable',
+                'pulse' => 'numeric|nullable',
+                'random_blood_sugar' => 'numeric|nullable',
+                'blood_pressure'=> 'string|nullable',
+                'investigation_files' => 'nullable',
+                'investigation_files.*'=>'nullable|file',
+            ]);
         
         if($request->hasfile('investigation_files')){
             $filesNames = [];

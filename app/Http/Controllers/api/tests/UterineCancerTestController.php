@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
+use App\Models\UterineCancerTest;
 use Illuminate\Http\Request;
 
 class UterineCancerTestController extends Controller
@@ -20,7 +21,40 @@ class UterineCancerTestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            "patient_id"=> "required|exists:patients,id",
+            "lynch_syndrome"=> "nullable|boolean",
+            "irregular_bleeding"=> "nullable|boolean",
+            "tvs_perimetrium_result"=> "nullable|string",
+            "tvs_myometrium_result"=> "nullable|string",
+            "tvs_endometrium_result"=> "nullable|string",
+            "biopsy_result"=> "nullable|string",
+            "biopsy_comment"=> "nullable|string",
+            "tvs_perimetrium_comment"=> "nullable|string",
+            "tvs_myometrium_comment"=> "nullable|string",
+            "tvs_endometrium_comment"=> "nullable|string",
+            "investigation_files"=> "nullable",
+            "investigation_files.*"=> "nullable|file",
+        ]);
+
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('uterine_cancer_test_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = json_encode($filesNames);
+        }
+    
+        $test = UterineCancerTest::create($data);
+      
+        return response()->json([
+           'message' => 'Uterine Cancer Test has been saved successfully',
+           'test' => $test,
+        ], 201);
     }
 
     /**
@@ -28,7 +62,13 @@ class UterineCancerTestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $examination = UterineCancerTest::find($id);
+
+        if($examination){
+            return response()->json($examination);  
+        }else{
+            return response()->json(['error' => 'Test not found'], 404);
+        }
     }
 
     /**

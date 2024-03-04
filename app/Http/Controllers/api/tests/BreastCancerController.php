@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\CervixCancerTest;
+use App\Models\BreastCancerTest;
 use Illuminate\Http\Request;
 
-class CervixCancerTestController extends Controller
+class BreastCancerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,15 +23,25 @@ class CervixCancerTestController extends Controller
     {
         $data = $request->validate([
             'patient_id' => 'required|exists:patients,id',
-            'hpv_vaccine' => 'boolean|nullable',
-            'via_test_result' => 'string|nullable',
-            'via_test_comment' => 'string|nullable',
-            'pap_smear_result' => 'string|nullable',
-            'pap_smear_comment' => 'string|nullable',
-            'recommendations' => 'string|nullable',
+            'age' => 'numeric|nullable',
+            'family_history' => 'string|nullable',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
         ]);
+
+        $points = 0;
+
+        if($data['age'] <= 25){
+            $points += 1;
+        }elseif($data['age'] >= 26 && $data['age'] <= 39){
+            $points += 2;
+        }elseif($data['age'] >= 40 && $data['age'] <= 49){
+            $points += 3;
+        }elseif($data['age'] >= 50 && $data['age'] <= 70){
+            $points += 4;
+        }elseif($data['age'] >= 80){
+            $points += 3;
+        }
 
         if($request->hasfile('investigation_files')){
             $filesNames = [];
@@ -39,16 +49,16 @@ class CervixCancerTestController extends Controller
             $investigationFileName = $investigationFile->getClientOriginalName();
             $filesNames[]=$investigationFileName;
 
-            $investigationFile->storeAs('cervix_cancer_test_investigations', $investigationFileName, 'public');
+            $investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
             }
             
             $data['investigation_files'] = json_encode($filesNames);
         }
 
-        $examination = CervixCancerTest::create($data);
+        $examination = BreastCancerTest::create($data);
 
         return response()->json([
-            'message' => 'Cervix cancer test has been saved successfully',
+            'message' => 'Breast cancer data has been saved successfully',
             'examination' => $examination], 201);
     }
 
@@ -57,7 +67,7 @@ class CervixCancerTestController extends Controller
      */
     public function show(string $id)
     {
-        $examination = CervixCancerTest::find($id);
+        $examination = BreastCancerTest::find($id);
 
         if($examination){
             return response()->json($examination);  

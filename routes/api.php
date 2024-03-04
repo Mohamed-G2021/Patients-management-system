@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\tests\OsteoporosisTestController;
 use App\Http\Controllers\api\tests\OvarianCancerTestController;
 use App\Http\Controllers\api\tests\PreEclampsiaTestController;
 use App\Http\Controllers\api\tests\UterineCancerTestController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\api\tests\GynaecologicalHistoryTestController;
 use App\Http\Controllers\api\tests\ObstetricHistoryTestController;
 use App\Http\Controllers\api\tests\CervixCancerTestController;
 use App\Http\Controllers\api\PatientController;
+use App\Http\Controllers\api\tests\BreastCancerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +38,8 @@ Route::resource('general-examination', GeneralExaminationController::class);
 Route::resource('obstetrics',ObstetricHistoryTestController::class);
 Route::resource('cervix',CervixCancerTestController::class);
 Route::resource('gynaecological',GynaecologicalHistoryTestController::class);
-Route::resource('obsteoporosis',ObstetricHistoryTestController::class);
+Route::resource('breast',BreastCancerController::class);
+Route::resource('osteoporosis',OsteoporosisTestController::class);
 Route::resource('ovarian',OvarianCancerTestController::class);
 Route::resource('pre-eclampsia',PreEclampsiaTestController::class);
 Route::resource('uterine',UterineCancerTestController::class);

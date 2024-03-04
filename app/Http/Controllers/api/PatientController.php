@@ -46,7 +46,12 @@ class PatientController extends Controller
     public function show(string $id)
     {
         $patient=Patient::find($id);
-        return $patient;
+        
+        if($patient){
+            return response()->json($patient);  
+        }else{
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
     }
 
     /**
@@ -86,6 +91,11 @@ class PatientController extends Controller
     public function Search(string $patient_code)
     {
         $patient = Patient::where('patient_code',$patient_code)->first();
-        return $patient;
+        
+        if($patient){
+            return response()->json($patient);  
+        }else{
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
     }
 }

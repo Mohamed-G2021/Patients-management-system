@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
+use App\Models\OvarianCancerTest;
 use Illuminate\Http\Request;
 
 class OvarianCancerTestController extends Controller
@@ -20,7 +21,24 @@ class OvarianCancerTestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+        'patient_id' => 'required|exists:patients,id',
+        "breast_cancer_history" => 'nullable|boolean',
+        "relatives_with_ovarian_cancer" => 'nullable|boolean',
+        "gene_mutation_or_lynch_syndrome" => 'nullable|boolean',
+        "tvs_result" => 'nullable|string',
+        "tvs_comment" => 'nullable|string',
+        "ca-125_result" => 'nullable|string',
+        "ca-125_comment" => 'nullable|string',
+        "recommendations" => 'nullable|string',
+        ]);
+
+        $examination = OvarianCancerTest::create($data);
+
+        return response()->json([
+            'message' => 'Ovarian test has been saved successfully',
+            'examination' => $examination
+        ],201);
     }
 
     /**
@@ -28,7 +46,14 @@ class OvarianCancerTestController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $examination = OvarianCancerTest::find($id);
+
+        if($examination) {
+            return response()->json($examination);            
+        }else{
+            return response()->json(['error'=> 'Examination not found'],404);
+        }
+        
     }
 
     /**

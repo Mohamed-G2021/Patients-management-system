@@ -20,10 +20,9 @@ return new class extends Migration
             $table->boolean('history_of_pre-eclampsia')->nullable();
             $table->integer('number_of_pregnancies_with_pe')->nullable();
             $table->string('date_of_pregnancies_with_pe')->nullable();
-            $table->string('fate_of_the_pregnancy')->nullable();
+            $table->enum('fate_of_the_pregnancy', ['1 child','> 1 child', 'still birth'])->nullable();
             $table->json('investigation_files')->nullable();
             $table->timestamps();
-
         });
     }
 
