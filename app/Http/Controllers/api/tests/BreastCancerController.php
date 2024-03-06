@@ -24,7 +24,7 @@ class BreastCancerController extends Controller
         $data = $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'age' => 'numeric|nullable',
-            'family_history' => 'string|nullable',
+            'family_history' => 'string|nullable|in:negative,positive in second degree relatives (any number),positive in one first degree relatives,positive in more than one first degree relatives',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
         ]);
@@ -39,8 +39,26 @@ class BreastCancerController extends Controller
             $points += 3;
         }elseif($data['age'] >= 50 && $data['age'] <= 70){
             $points += 4;
-        }elseif($data['age'] >= 80){
+        }elseif($data['age'] > 70){
             $points += 3;
+        }
+
+        if($data['family_history'] == 'negative'){
+            $points += 1;
+        }elseif($data['family_history'] == 'positive in second degree relatives (any number)'){
+            $points += 2;
+        }elseif($data['family_history'] == 'positive in one first degree relatives'){
+            $points += 3;
+        }elseif($data['family_history'] == 'positive in more than one first degree relatives'){
+            $points += 4;
+        }
+    
+        if($points >= 2 && $points <= 4){
+            $data['recommendations'] = 'Breast self exam: monthly, Breast specialist exam : Once a year';
+        }elseif($points >= 5 && $points <= 6){
+            $data['recommendations'] = 'Breast self exam : monthly, Breast specialist exam Once a year, Mamography : every 2 years (at age 40-70 only)';
+        }elseif($points >= 7 && $points <= 8){
+            $data['recommendations'] = 'Breast self exam : monthly, Breast specialist exam : twice a year, Mamography : every year (at age 40-70 Only)';
         }
 
         if($request->hasfile('investigation_files')){
