@@ -59,8 +59,10 @@ class PatientController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $patient = Patient::find($id);
+
         $data = $request->validate([
-            "national_id"=> "required|unique:patients,national_id|digits:14",
+            "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
             "name" => "required",
             "age"=>"required",
             "phone_number"=> "required",
@@ -72,7 +74,6 @@ class PatientController extends Controller
         $data['relative_name'] = $request->relative_name;
         $data['relative_phone'] = $request->relative_phone;
 
-        $patient = Patient::find($id);
         $patient->update($data);
         
         return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $patient], 200);

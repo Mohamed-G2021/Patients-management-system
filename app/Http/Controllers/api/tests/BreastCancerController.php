@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
 use App\Models\BreastCancerTest;
+use App\Models\HistoryTests\BreastCancerHistoryTest;
 use Illuminate\Http\Request;
 
 class BreastCancerController extends Controller
@@ -70,13 +71,13 @@ class BreastCancerController extends Controller
             $investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigation_files'] = json_encode($filesNames);
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
         $examination = BreastCancerTest::create($data);
 
         return response()->json([
-            'message' => 'Breast cancer data has been saved successfully',
+            'message' => 'Breast cancer test has been saved successfully',
             'examination' => $examination], 201);
     }
 
@@ -99,7 +100,68 @@ class BreastCancerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'patient_id' => 'required|exists:patients,id',
+            'age' => 'numeric|nullable',
+            'family_history' => 'string|nullable|in:negative,positive in second degree relatives (any number),positive in one first degree relatives,positive in more than one first degree relatives',
+            'investigation_files' => 'nullable',
+            'investigation_files.*'=>'nullable|file',
+        ]);
+
+        $points = 0;
+
+        if($data['age'] <= 25){
+            $points += 1;
+        }elseif($data['age'] >= 26 && $data['age'] <= 39){
+            $points += 2;
+        }elseif($data['age'] >= 40 && $data['age'] <= 49){
+            $points += 3;
+        }elseif($data['age'] >= 50 && $data['age'] <= 70){
+            $points += 4;
+        }elseif($data['age'] > 70){
+            $points += 3;
+        }
+
+        if($data['family_history'] == 'negative'){
+            $points += 1;
+        }elseif($data['family_history'] == 'positive in second degree relatives (any number)'){
+            $points += 2;
+        }elseif($data['family_history'] == 'positive in one first degree relatives'){
+            $points += 3;
+        }elseif($data['family_history'] == 'positive in more than one first degree relatives'){
+            $points += 4;
+        }
+    
+        if($points >= 2 && $points <= 4){
+            $data['recommendations'] = 'Breast self exam: monthly, Breast specialist exam : Once a year';
+        }elseif($points >= 5 && $points <= 6){
+            $data['recommendations'] = 'Breast self exam : monthly, Breast specialist exam Once a year, Mamography : every 2 years (at age 40-70 only)';
+        }elseif($points >= 7 && $points <= 8){
+            $data['recommendations'] = 'Breast self exam : monthly, Breast specialist exam : twice a year, Mamography : every year (at age 40-70 Only)';
+        }
+
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+        }
+
+        $oldExamination = BreastCancerTest::find($id);
+        $data['test_id'] = $oldExamination->id;
+        $data['doctor_id'] = 1;
+
+        $newExamination = BreastCancerHistoryTest::create($data);
+       
+        return response()->json([
+        'message' => 'Breast Canser History Test has been updated successfully',
+        'examination' => $newExamination],
+        200);
     }
 
     /**

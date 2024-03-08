@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $doctor =User::find($id);
+        $doctor = User::find($id);
         
         if($doctor){
             return response()->json($doctor);  
@@ -51,12 +51,13 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $doctor = User::find($id);
+        
         $data = $request->validate([
             "password" => "required",
-            "email"=> "required|unique:users,email",
+            "email"=> "required|unique:users,email,".$doctor->id,
         ]);
 
-        $doctor = User::find($id);
         $doctor->update($data);
 
         return response()->json(['message' => 'Doctor has been updated successfully', 'doctor' => $doctor], 200);

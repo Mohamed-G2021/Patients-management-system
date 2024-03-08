@@ -18,7 +18,7 @@ class ObstetricTest extends Model
         'abortion',
         'notes',
         'investigation_files',   
-       ] ;
+    ] ;
 
     //------------ many to many relationship test with doctor -----------
     public function doctors(): MorphToMany

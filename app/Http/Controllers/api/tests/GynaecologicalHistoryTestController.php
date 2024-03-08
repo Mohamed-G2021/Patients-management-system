@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
 use App\Models\GynaecologicalTest;
+use App\Models\HistoryTests\GynaecologicalHistoryTest;
 use Illuminate\Http\Request;
 
 class GynaecologicalHistoryTestController extends Controller
@@ -27,17 +28,17 @@ class GynaecologicalHistoryTestController extends Controller
             'menstrual_cycle_abnormalities' => 'string|nullable',
             'contact_bleeding' => 'boolean|nullable',
             'menopause' => 'boolean|nullable',
-            'menopause_age' => 'nullable|required_if:menopause,yes|integer',
+            'menopause_age' => 'nullable|required_if_accepted:menopause|integer',
             'using_of_contraception' => 'boolean|nullable',
-            'contraception_method' => 'nullable|required_if:using_of_contraception,yes|string|in:Pills,IUD,Injectable,Other',
+            'contraception_method' => 'nullable|required_if_accepted:using_of_contraception|string|in:Pills,IUD,Injectable,Other',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
             ]);
         
-        if (!$data['menopause']) {
+        if (!$request->menopause) {
             $data['menopause_age'] = null;
         }
-        if (!$data['using_of_contraception']) {
+        if (!$request->using_of_contraception) {
             $data['contraception_method'] = null;
         }
         
@@ -50,7 +51,7 @@ class GynaecologicalHistoryTestController extends Controller
             $investigationFile->storeAs('gynaecological_history_test_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigation_files'] = json_encode($filesNames);
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
         
         $historyTest = GynaecologicalTest::create($data);
@@ -59,7 +60,6 @@ class GynaecologicalHistoryTestController extends Controller
             'message' => 'Gynaecological history test has been saved successfully',
             'history_test' => $historyTest,
         ], 201);
-    
     }
 
     /**
@@ -81,20 +81,19 @@ class GynaecologicalHistoryTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-     
         $data = $request->validate([
             'patient_id' =>'required|exists:patients,id',
-            'date_of_last_period' => 'date',
-            'menstrual_cycle_abnormalities' => 'string',
-            'contact_bleeding' => 'boolean',
-            'menopause' => 'boolean',
-            'menopause_age' => 'nullable|required_if:menopause,yes|integer',
-            'using_of_contraception' => 'boolean',
-            'contraception_method' => 'nullable|required_if:using_of_contraception,yes|string|in:Pills,IUD,Injectable,Other',
+            'date_of_last_period' => 'date|nullable',
+            'menstrual_cycle_abnormalities' => 'string|nullable',
+            'contact_bleeding' => 'boolean|nullable',
+            'menopause' => 'boolean|nullable',
+            'menopause_age' => 'nullable|required_if_accepted:menopause|integer',
+            'using_of_contraception' => 'boolean|nullable',
+            'contraception_method' => 'nullable|required_if_accepted:using_of_contraception|string|in:Pills,IUD,Injectable,Other',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
-        ]);
-
+            ]);
+        
         if (!$data['menopause']) {
             $data['menopause_age'] = null;
         }
@@ -111,16 +110,19 @@ class GynaecologicalHistoryTestController extends Controller
             $investigationFile->storeAs('gynaecological_history_test_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigation_files'] = implode(',', $filesNames);
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $historyTest = GynaecologicalTest::find($id);
-        $historyTest->update($data);
+        $oldExamination = GynaecologicalTest::find($id);
+        $data['test_id'] = $oldExamination->id;
+        $data['doctor_id'] = 1;
+
+        $newExamination = GynaecologicalHistoryTest::create($data);
 
         return response()->json([
             'message' => 'Gynaecological history test has been updated successfully',
-            'history_test' => $historyTest,
-        ], 200);
+            'examination' => $newExamination],
+            200);
     }
 
     /**

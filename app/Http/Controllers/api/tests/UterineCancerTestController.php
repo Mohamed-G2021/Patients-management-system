@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
+use App\Models\HistoryTests\UterineCancerHistoryTest;
 use App\Models\UterineCancerTest;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class UterineCancerTestController extends Controller
     {
         $data = $request->validate([
             "patient_id"=> "required|exists:patients,id",
-            "lynch_syndrome"=> "nullable|boolean",
+            "lynch_syndrome"=> "nullable|boolean|in:+ve,-ve",
             "irregular_bleeding"=> "nullable|boolean",
             "tvs_perimetrium_result"=> "nullable|string",
             "tvs_myometrium_result"=> "nullable|string",
@@ -46,7 +47,7 @@ class UterineCancerTestController extends Controller
             $investigationFile->storeAs('uterine_cancer_test_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigation_files'] = json_encode($filesNames);
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
     
         $test = UterineCancerTest::create($data);
@@ -76,7 +77,44 @@ class UterineCancerTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            "patient_id"=> "required|exists:patients,id",
+            "lynch_syndrome"=> "nullable|boolean|in:+ve,-ve",
+            "irregular_bleeding"=> "nullable|boolean",
+            "tvs_perimetrium_result"=> "nullable|string",
+            "tvs_myometrium_result"=> "nullable|string",
+            "tvs_endometrium_result"=> "nullable|string",
+            "biopsy_result"=> "nullable|string",
+            "biopsy_comment"=> "nullable|string",
+            "tvs_perimetrium_comment"=> "nullable|string",
+            "tvs_myometrium_comment"=> "nullable|string",
+            "tvs_endometrium_comment"=> "nullable|string",
+            "investigation_files"=> "nullable",
+            "investigation_files.*"=> "nullable|file",
+        ]);
+
+        if($request->hasfile('investigation_files')){
+            $filesNames = [];
+            foreach($request->file('investigation_files')  as $investigationFile){
+            $investigationFileName = $investigationFile->getClientOriginalName();
+            $filesNames[]=$investigationFileName;
+
+            $investigationFile->storeAs('uterine_cancer_test_investigations', $investigationFileName, 'public');
+            }
+            
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+        }
+    
+        $oldExamination = UterineCancerTest::find($id);
+        $data['test_id'] = $oldExamination->id;
+        $data['doctor_id'] = 1;
+
+        $newExamination = UterineCancerHistoryTest::create($data);
+       
+        return response()->json([
+        'message' => 'Uterine Cancer Test has been updated successfully',
+        'examination' => $newExamination],
+        200);
     }
 
     /**
