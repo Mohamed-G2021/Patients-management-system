@@ -19,6 +19,7 @@ class GynaecologicalTest extends Model
         'menopause_age',
         'using_of_contraception',
         'contraception_method',
+        'other_contraception_method',
         'investigation_files',  
       ];
 

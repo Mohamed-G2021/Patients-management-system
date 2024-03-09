@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\PatientPersonalInfoHistory;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -74,9 +75,13 @@ class PatientController extends Controller
         $data['relative_name'] = $request->relative_name;
         $data['relative_phone'] = $request->relative_phone;
 
-        $patient->update($data);
+        $data['patient_id'] = $patient->id;
+        $data['patient_code'] = $patient->patient_code;
+        $data['doctor_id'] = 1;
+
+        $newInformation = PatientPersonalInfoHistory::create($data);
         
-        return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $patient], 200);
+        return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $newInformation], 200);
     }
 
     /**

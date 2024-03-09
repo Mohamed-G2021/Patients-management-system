@@ -32,6 +32,7 @@ return new class extends Migration
             $table->integer('menopause_age')->nullable();
             $table->boolean('using_of_contraception')->nullable();
             $table->enum('contraception_method',['Pills','IUD','Injectable','Other'])->nullable();
+            $table->string('other_contraception_method')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();
         });

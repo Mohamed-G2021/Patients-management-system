@@ -31,15 +31,19 @@ class GynaecologicalHistoryTestController extends Controller
             'menopause_age' => 'nullable|required_if_accepted:menopause|integer',
             'using_of_contraception' => 'boolean|nullable',
             'contraception_method' => 'nullable|required_if_accepted:using_of_contraception|string|in:Pills,IUD,Injectable,Other',
+            'other_contraception_method' => 'nullable|string|required_if:contraception_method,Other',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
             ]);
-        
+    
         if (!$request->menopause) {
             $data['menopause_age'] = null;
         }
         if (!$request->using_of_contraception) {
             $data['contraception_method'] = null;
+        } 
+        if (!$request->using_of_contraception || $request->contraception_method != 'Other') {
+            $data['other_contraception_method'] = null;
         }
         
         if($request->hasfile('investigation_files')){
@@ -90,15 +94,19 @@ class GynaecologicalHistoryTestController extends Controller
             'menopause_age' => 'nullable|required_if_accepted:menopause|integer',
             'using_of_contraception' => 'boolean|nullable',
             'contraception_method' => 'nullable|required_if_accepted:using_of_contraception|string|in:Pills,IUD,Injectable,Other',
+            'other_contraception_method' => 'nullable|string|required_if:contraception_method,Other',
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
             ]);
         
-        if (!$data['menopause']) {
+         if (!$request->menopause) {
             $data['menopause_age'] = null;
         }
-        if (!$data['using_of_contraception']) {
+        if (!$request->using_of_contraception) {
             $data['contraception_method'] = null;
+        } 
+        if (!$request->using_of_contraception || $request->contraception_method != 'Other') {
+            $data['other_contraception_method'] = null;
         }
         
         if($request->hasfile('investigation_files')){

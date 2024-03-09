@@ -21,6 +21,7 @@ class GynaecologicalHistoryTest extends Model
         'menopause_age',
         'using_of_contraception',
         'contraception_method',
+        'other_contraception_method',
         'investigation_files',  
     ];
     //------------ one to many relationship history test with test -----------
