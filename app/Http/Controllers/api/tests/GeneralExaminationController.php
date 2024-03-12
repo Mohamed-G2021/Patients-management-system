@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralExamination;
+use App\Models\HistoryTests\GeneralExaminationHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 class GeneralExaminationController extends Controller
@@ -90,14 +91,19 @@ class GeneralExaminationController extends Controller
             $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
             }
             
-            $data['investigation_files'] = json_encode($filesNames);
-
+            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $examination = GeneralExamination::find($id);
-        $examination->update($data);
+        $oldExamination = GeneralExamination::find($id);
+        $data['test_id'] = $oldExamination->id;
+        $data['doctor_id'] = 1;
 
-        return response()->json(['message' => 'General examination has been updated successfully', 'examination' => $examination], 200);
+        $newExamination = GeneralExaminationHistory::create($data);
+
+        return response()->json([
+            'message' => 'General examination has been updated successfully',
+            'examination' => $newExamination],
+            200);
     }
     /**
      * Remove the specified resource from storage.

@@ -13,7 +13,7 @@ class UterineCancerTest extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
-        'lynch_syndrome(+ve,-ve)',
+        'lynch_syndrome',
         'irregular_bleeding',
         'tvs_perimetrium_result',
         'tvs_myometrium_result',

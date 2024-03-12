@@ -26,7 +26,14 @@ return new class extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->integer('age');
-            $table->string('family_history')->nullable();
+            $table->enum('family_history',
+            [
+            'negative',
+            'positive in second degree relatives (any number)',
+            'positive in one first degree relatives',
+            'positive in more than one first degree relatives'
+            ])
+            ->nullable();
             $table->string('recommendations')->nullable();
             $table->string('investigation_files')->nullable();
             $table->timestamps();

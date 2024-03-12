@@ -17,7 +17,7 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->boolean('lynch_syndrome')->nullable();
+            $table->enum('lynch_syndrome',['+ve', '-ve'])->nullable();
             $table->boolean('irregular_bleeding')->nullable();
             $table->string('tvs_perimetrium_result')->nullable();
             $table->string('tvs_myometrium_result')->nullable();
