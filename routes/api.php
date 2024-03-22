@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\tests\OsteoporosisTestController;
 use App\Http\Controllers\api\tests\OvarianCancerTestController;
 use App\Http\Controllers\api\tests\PreEclampsiaTestController;
@@ -25,8 +26,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->get('/auth/user', function (Request $request) {
+    return Auth::guard('sanctum')->user();
 });
 
 Route::resource('doctors', UserController::class);
@@ -44,3 +45,9 @@ Route::resource('ovarian',OvarianCancerTestController::class);
 Route::resource('pre-eclampsia',PreEclampsiaTestController::class);
 Route::resource('uterine',UterineCancerTestController::class);
 
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::delete('logout', [AuthController::class, 'logout'])
+    ->middleware('auth:sanctum');
+Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('reset-password', [AuthController::class, 'resetPassword']);

@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 class GeneralExaminationController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
     /**
      * Display a listing of the resource.
      */

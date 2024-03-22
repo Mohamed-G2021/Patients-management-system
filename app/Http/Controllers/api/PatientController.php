@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
     /**
      * Display a listing of the resource.
      */
