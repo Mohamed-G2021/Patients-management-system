@@ -109,11 +109,9 @@ class UterineCancerTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
     
-        $oldExamination = UterineCancerTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = UterineCancerHistoryTest::create($data);
+        $newExamination = UterineCancerTest::create($data);
        
         return response()->json([
         'message' => 'Uterine Cancer Test has been updated successfully',

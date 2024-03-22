@@ -99,8 +99,6 @@ class GeneralExaminationController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = GeneralExamination::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
         $newExamination = GeneralExamination::create($data);

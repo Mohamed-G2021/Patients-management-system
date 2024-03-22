@@ -156,11 +156,9 @@ class BreastCancerController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = BreastCancerTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = BreastCancerHistoryTest::create($data);
+        $newExamination = BreastCancerTest::create($data);
        
         return response()->json([
         'message' => 'Breast Canser History Test has been updated successfully',

@@ -97,11 +97,9 @@ class PreEclampsiaTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = PreEclampsiaTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = PreEclampsiaHistoryTest::create($data);
+        $newExamination = PreEclampsiaTest::create($data);
        
         return response()->json([
         'message' => 'PreEclampsia Test has been updated successfully',

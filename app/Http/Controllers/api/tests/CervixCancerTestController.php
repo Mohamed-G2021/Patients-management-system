@@ -100,11 +100,9 @@ class CervixCancerTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = CervixCancerTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = CervixCancerHistoryTest::create($data);
+        $newExamination = CervixCancerTest::create($data);
 
         return response()->json([
             'message' => 'Cervix cancer test has been updated successfully',

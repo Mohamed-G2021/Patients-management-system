@@ -125,11 +125,9 @@ class GynaecologicalHistoryTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = GynaecologicalTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = GynaecologicalHistoryTest::create($data);
+        $newExamination = GynaecologicalTest::create($data);
 
         return response()->json([
             'message' => 'Gynaecological history test has been updated successfully',

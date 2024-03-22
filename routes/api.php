@@ -51,3 +51,5 @@ Route::delete('logout', [AuthController::class, 'logout'])
     ->middleware('auth:sanctum');
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
+
+Route::get('patients/{id}/history', [PatientController::class, 'getPatientHistory']);

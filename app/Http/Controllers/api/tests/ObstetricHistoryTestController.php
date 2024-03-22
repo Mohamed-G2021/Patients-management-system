@@ -97,11 +97,9 @@ class ObstetricHistoryTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = ObstetricTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = ObstetricHistoryTest::create($data);
+        $newExamination = ObstetricTest::create($data);
        
         return response()->json([
         'message' => 'Obstetric History Test has been updated successfully',

@@ -78,11 +78,9 @@ class OvarianCancerTestController extends Controller
             "recommendations" => 'nullable|string',
         ]);
 
-        $oldExamination = OvarianCancerTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = OvarianCancerHistoryTest::create($data);
+        $newExamination = OvarianCancerTest::create($data);
        
         return response()->json([
         'message' => 'Ovarian Test has been updated successfully',

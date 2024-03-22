@@ -155,11 +155,9 @@ class OsteoporosisTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
 
-        $oldExamination = OsteoporosisTest::find($id);
-        $data['test_id'] = $oldExamination->id;
         $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = OsteoporosisHistoryTest::create($data);
+        $newExamination = OsteoporosisTest::create($data);
        
         return response()->json([
         'message' => 'Osteoporosis Test has been updated successfully',
