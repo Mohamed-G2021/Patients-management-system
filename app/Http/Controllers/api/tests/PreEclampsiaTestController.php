@@ -99,7 +99,7 @@ class PreEclampsiaTestController extends Controller
 
         $oldExamination = PreEclampsiaTest::find($id);
         $data['test_id'] = $oldExamination->id;
-        $data['doctor_id'] = 1;
+        $data['doctor_id'] = auth()->user()->id;
 
         $newExamination = PreEclampsiaHistoryTest::create($data);
        

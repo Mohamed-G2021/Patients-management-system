@@ -13,6 +13,7 @@ class OvarianCancerTest extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         "breast_cancer_history",
         "relatives_with_ovarian_cancer",
         "gene_mutation_or_lynch_syndrome",

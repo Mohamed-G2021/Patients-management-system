@@ -17,6 +17,10 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->float('height')->nullable();
             $table->integer('pulse')->nullable();
             $table->float('weight')->nullable();

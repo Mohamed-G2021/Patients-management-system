@@ -14,6 +14,7 @@ class CervixCancerTest extends Model
 
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         'hpv_vaccine',
         'via_test_result',
         'via_test_comment',

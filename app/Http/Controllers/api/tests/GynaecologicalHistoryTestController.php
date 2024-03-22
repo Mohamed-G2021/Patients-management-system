@@ -127,7 +127,7 @@ class GynaecologicalHistoryTestController extends Controller
 
         $oldExamination = GynaecologicalTest::find($id);
         $data['test_id'] = $oldExamination->id;
-        $data['doctor_id'] = 1;
+        $data['doctor_id'] = auth()->user()->id;
 
         $newExamination = GynaecologicalHistoryTest::create($data);
 

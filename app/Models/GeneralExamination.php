@@ -14,6 +14,7 @@ class GeneralExamination extends Model
     protected $table = 'general_examination_tests';
     protected $fillable=[
         'patient_id',
+        'doctor_id',
         'height',
         'pulse',
         'weight',

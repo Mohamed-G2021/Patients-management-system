@@ -81,7 +81,7 @@ class PatientController extends Controller
 
         $data['patient_id'] = $patient->id;
         $data['patient_code'] = $patient->patient_code;
-        $data['doctor_id'] = 1;
+        $data['doctor_id'] = auth()->user()->id;
 
         $newInformation = PatientPersonalInfoHistory::create($data);
         

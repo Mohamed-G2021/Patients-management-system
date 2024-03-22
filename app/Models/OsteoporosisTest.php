@@ -13,6 +13,7 @@ class OsteoporosisTest extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         'age',
         'weight',
         'current_oestrogen_use',

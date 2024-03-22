@@ -49,6 +49,7 @@ class GeneralExaminationController extends Controller
             $data['investigation_files'] = json_encode($filesNames);
         }
 
+        $data['doctor_id'] = auth()->user()->id;
         $examination = GeneralExamination::create($data);
 
         return response()->json([
@@ -100,9 +101,9 @@ class GeneralExaminationController extends Controller
 
         $oldExamination = GeneralExamination::find($id);
         $data['test_id'] = $oldExamination->id;
-        $data['doctor_id'] = 1;
+        $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = GeneralExaminationHistory::create($data);
+        $newExamination = GeneralExamination::create($data);
 
         return response()->json([
             'message' => 'General examination has been updated successfully',

@@ -12,6 +12,7 @@ class GynaecologicalTest extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         'date_of_last_period',
         'menstrual_cycle_abnormalities',
         'contact_bleeding',

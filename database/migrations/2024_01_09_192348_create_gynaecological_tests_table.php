@@ -17,6 +17,10 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->string('date_of_last_period')->nullable();
             $table->string('menstrual_cycle_abnormalities')->nullable();
             $table->boolean('contact_bleeding')->nullable();

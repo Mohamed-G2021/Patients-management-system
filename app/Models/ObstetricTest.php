@@ -13,6 +13,7 @@ class ObstetricTest extends Model
     use HasFactory;
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         'gravidity',
         'parity',
         'abortion',

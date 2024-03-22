@@ -80,7 +80,7 @@ class OvarianCancerTestController extends Controller
 
         $oldExamination = OvarianCancerTest::find($id);
         $data['test_id'] = $oldExamination->id;
-        $data['doctor_id'] = 1;
+        $data['doctor_id'] = auth()->user()->id;
 
         $newExamination = OvarianCancerHistoryTest::create($data);
        

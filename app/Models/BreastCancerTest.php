@@ -14,6 +14,7 @@ class BreastCancerTest extends Model
 
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         'age',
         'family_history',
         'recommendations',
