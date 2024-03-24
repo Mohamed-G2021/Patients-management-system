@@ -61,14 +61,14 @@ class PreEclampsiaTestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $pateint_id)
     {
-        $examination = PreEclampsiaTest::find($id);
+        $examination = PreEclampsiaTest::where('patient_id',$pateint_id)->latest()->first();
 
         if($examination){
             return response()->json($examination);  
         }else{
-            return response()->json(['error' => 'Test not found'], 404);
+            return response()->json(['error' => 'No examinations found for this patient'], 404);
         }
     }
 

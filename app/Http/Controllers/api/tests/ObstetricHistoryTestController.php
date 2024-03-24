@@ -61,14 +61,14 @@ class ObstetricHistoryTestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $pateint_id)
     {
-        $examination = ObstetricTest::find($id);
+        $examination = ObstetricTest::where('patient_id',$pateint_id)->latest()->first();
 
         if($examination){
             return response()->json($examination);  
         }else{
-            return response()->json(['error' => 'Examination not found'], 404);
+            return response()->json(['error' => 'No examinations found for this patient'], 404);
         }
     }
 
