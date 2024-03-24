@@ -11,7 +11,7 @@ class BreastCancerController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum')->except(['show']);
     }
     /**
      * Display a listing of the resource.
@@ -77,6 +77,8 @@ class BreastCancerController extends Controller
             
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
+
+        $data['doctor_id'] = auth()->user()->id;
 
         $examination = BreastCancerTest::create($data);
 

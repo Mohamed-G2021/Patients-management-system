@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('patient_code')->unique()->required();
             $table->string('date_of_birth')->required();
             $table->string('address')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->string('marital_state')->required();
             $table->string('relative_name')->nullable();
             $table->string('relative_phone')->nullable();

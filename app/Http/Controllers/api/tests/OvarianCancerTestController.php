@@ -11,7 +11,7 @@ class OvarianCancerTestController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum')->except(['show']);
     }
     /**
      * Display a listing of the resource.
@@ -37,6 +37,8 @@ class OvarianCancerTestController extends Controller
             "ca-125_comment" => 'nullable|string',
             "recommendations" => 'nullable|string',
         ]);
+
+        $data['doctor_id'] = auth()->user()->id;
 
         $examination = OvarianCancerTest::create($data);
 

@@ -3,15 +3,25 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BreastCancerTest;
+use App\Models\CervixCancerTest;
+use App\Models\GeneralExamination;
+use App\Models\GynaecologicalTest;
+use App\Models\ObstetricTest;
+use App\Models\OsteoporosisTest;
+use App\Models\OvarianCancerTest;
 use App\Models\Patient;
 use App\Models\PatientPersonalInfoHistory;
+use App\Models\PreEclampsiaTest;
+use App\Models\User;
+use App\Models\UterineCancerTest;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum')->except(['search', 'show']);
     }
     /**
      * Display a listing of the resource.
@@ -33,7 +43,8 @@ class PatientController extends Controller
             "age"=>"required",
             "phone_number"=> "required",
             "date_of_birth"=> "required",
-            "marital_state"=> "required",            
+            "marital_state"=> "required",    
+            "email" => "unique:patients,email",       
         ]);
         
         $data['address'] = $request->address;
@@ -73,15 +84,15 @@ class PatientController extends Controller
             "phone_number"=> "required",
             "date_of_birth"=> "required",
             "marital_state"=> "required",
+            "email" => "nullable|unique:patients,email,".$patient->id,
         ]);
         
+        $data['patient_id'] = $patient->id;
         $data['address'] = $request->address;
         $data['relative_name'] = $request->relative_name;
         $data['relative_phone'] = $request->relative_phone;
-
-        $data['patient_id'] = $patient->id;
         $data['patient_code'] = $patient->patient_code;
-        $data['doctor_id'] = 1;
+        $data['doctor_id'] = auth()->user()->id;
 
         $newInformation = PatientPersonalInfoHistory::create($data);
         
@@ -98,7 +109,7 @@ class PatientController extends Controller
         return response()->json(['patient has been deleted successfully']);
     }
 
-    public function Search(string $patient_code)
+    public function search(string $patient_code)
     {
         $patient = Patient::where('patient_code',$patient_code)->first();
         

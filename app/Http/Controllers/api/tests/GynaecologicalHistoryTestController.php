@@ -11,7 +11,7 @@ class GynaecologicalHistoryTestController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum')->except(['show']);
     }
     /**
      * Display a listing of the resource.
@@ -62,6 +62,8 @@ class GynaecologicalHistoryTestController extends Controller
             $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
         }
         
+        $data['doctor_id'] = auth()->user()->id;
+
         $historyTest = GynaecologicalTest::create($data);
         
         return response()->json([
