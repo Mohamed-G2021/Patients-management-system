@@ -143,6 +143,8 @@ class OsteoporosisTestController extends Controller
         
         if($points >= 9){
             $data['recommendations'] = 'Bone densitometry should be done';
+        }else{
+            $data['recommendations'] = 'No recommendation';
         }
 
         if($request->hasfile('investigation_files')){
