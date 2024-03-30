@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,7 +13,6 @@ class Patient extends Model
     protected $fillable = [
         'national_id',
         'name',
-        'age',
         'phone_number',
         'patient_code',
         'date_of_birth',
@@ -23,6 +23,12 @@ class Patient extends Model
         'email'
     ];
 
+    protected $appends = ['age'];
+
+    public function getAgeAttribute()
+    {
+    return Carbon::parse($this->attributes['date_of_birth'])->age;
+    }
     //------------------- many to many patients with doctors ---------------------
     public function doctors(): BelongsToMany
     {

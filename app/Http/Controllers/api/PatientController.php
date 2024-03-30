@@ -40,9 +40,8 @@ class PatientController extends Controller
         $data = $request->validate([
             "national_id"=> "required|unique:patients,national_id|digits:14",
             "name" => "required",
-            "age"=>"required",
             "phone_number"=> "required",
-            "date_of_birth"=> "required",
+            "date_of_birth"=> "required|date",
             "marital_state"=> "required",    
             "email" => "unique:patients,email",       
         ]);
@@ -80,9 +79,8 @@ class PatientController extends Controller
         $data = $request->validate([
             "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
             "name" => "required",
-            "age"=>"required",
             "phone_number"=> "required",
-            "date_of_birth"=> "required",
+            "date_of_birth"=> "required|date",
             "marital_state"=> "required",
             "email" => "nullable|unique:patients,email,".$patient->id,
         ]);

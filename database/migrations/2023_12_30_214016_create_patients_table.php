@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('national_id')->required()->unique();
             $table->string('name')->required();
-            $table->integer('age')->required();
             $table->string('phone_number')->required();
             $table->integer('patient_code')->unique()->required();
             $table->string('date_of_birth')->required();
