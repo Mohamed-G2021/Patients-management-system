@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\tests;
 use App\Http\Controllers\Controller;
 use App\Models\BreastCancerTest;
 use App\Models\HistoryTests\BreastCancerHistoryTest;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 
 class BreastCancerController extends Controller
@@ -33,7 +34,9 @@ class BreastCancerController extends Controller
             'investigation_files' => 'nullable',
             'investigation_files.*'=>'nullable|file',
         ]);
-
+        
+        $data['age'] = Patient::find($data['patient_id'])->age;
+        
         $points = 0;
 
         if($data['age'] <= 25){

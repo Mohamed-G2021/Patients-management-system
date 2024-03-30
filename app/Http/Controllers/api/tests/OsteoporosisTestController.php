@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\tests;
 use App\Http\Controllers\Controller;
 use App\Models\HistoryTests\OsteoporosisHistoryTest;
 use App\Models\OsteoporosisTest;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 
 class OsteoporosisTestController extends Controller
@@ -28,13 +29,14 @@ class OsteoporosisTestController extends Controller
     {
         $data = $request->validate([
             "patient_id"=> "required|exists:patients,id",
-            "age"=> "nullable|numeric",
             "weight"=> "nullable|numeric",
             "current_oestrogen_use"=> "nullable|boolean",
             "investigation_files"=> "nullable",
             "investigation_files.*"=> "nullable|file",
         ]);
 
+        $data['age'] = Patient::find($data['patient_id'])->age;
+        
         $points = 0;
 
         if($data['age'] >= 45 && $data['age'] <= 54){
