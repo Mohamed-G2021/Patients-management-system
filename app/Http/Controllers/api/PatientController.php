@@ -119,4 +119,37 @@ class PatientController extends Controller
             return response()->json(['error' => 'Patient not found'], 404);
         }
     }
+
+    public function getPatientHistory(string $id){
+        $generalExaminations = GeneralExamination::where('patient_id', $id)->orderByDesc('created_at')->get();
+        
+        $response = collect();
+        foreach ($generalExaminations as $generalExamination) {
+            $doctor = $generalExamination->doctor_id;
+            $doctorName = User::where('id',$doctor)->first()->name;
+            $gynaecological = GynaecologicalTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $obstetric = ObstetricTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $breast = BreastCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $ovarian = OvarianCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $preEclampsia = PreEclampsiaTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $uterine = UterineCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $osteoporosis = OsteoporosisTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            $cervix = CervixCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+
+            $response->push([
+                "date" => $generalExamination->created_at->format('d-m-Y'),
+                "doctor name" => $doctorName,
+                "general examination" => $generalExamination,
+                "gynaecological" => $gynaecological,
+                "obstetric" => $obstetric,
+                "breast" => $breast,
+                "ovarian" => $ovarian,
+                "preEclampsia" => $preEclampsia,
+                "uterine" => $uterine,
+                "osteoporosis" => $osteoporosis,
+                "cervix" => $cervix,
+            ]);
+         }
+        return response()->json(["patient History" => $response], 200);   
+    }
 }
