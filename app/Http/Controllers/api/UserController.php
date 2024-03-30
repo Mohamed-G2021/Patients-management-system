@@ -21,7 +21,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth:sanctum');
         $this->middleware('admin');
     }
     /**
@@ -69,14 +69,19 @@ class UserController extends Controller
     {
         $doctor = User::find($id);
         
-        $data = $request->validate([
-            "password" => "required|confirmed",
-            "email"=> "required|unique:users,email,".$doctor->id,
-        ]);
+        if($doctor){
+            $data = $request->validate([
+                "password" => "required|confirmed",
+                "email"=> "required|unique:users,email,".$doctor->id,
+            ]);
 
-        $doctor->update($data);
+            $doctor->update($data);
 
-        return response()->json(['message' => 'Doctor has been updated successfully', 'doctor' => $doctor], 200);
+            return response()->json(['message' => 'Doctor has been updated successfully', 'doctor' => $doctor], 200);
+        }else{
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
+        
     }
 
     /**
@@ -85,8 +90,13 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $doctor=User::find($id);
-        $doctor->delete();
-        return response()->json(['doctor has been deleted successfully']);
+
+        if($doctor){
+            $doctor->delete();
+            return response()->json(['doctor has been deleted successfully']);
+        }else{
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
     }
 
     public function getDoctorHistory(string $id){
