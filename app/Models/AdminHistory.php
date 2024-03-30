@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BreastCancerTest extends Model
+class AdminHistory extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'patient_id',
+        'admin_id',
         'doctor_id',
-        'age',
-        'family_history',
-        'recommendations',
-        'investigation_files'
+        'action',
     ];
 }

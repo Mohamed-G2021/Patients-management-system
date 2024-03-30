@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminHistory;
 use App\Models\BreastCancerTest;
 use App\Models\CervixCancerTest;
 use App\Models\GeneralExamination;
@@ -44,6 +45,12 @@ class UserController extends Controller
         ]);
     
         $doctor = User::create($request->all());
+
+        AdminHistory::create([
+            'admin_id' => auth()->user()->id,
+            'doctor_id' => $doctor->id,
+            'action' => 'added',
+        ]);
     
         return response()->json(['message' => 'Doctor has been saved successfully', 'doctor' => $doctor], 200);
     }
@@ -77,6 +84,12 @@ class UserController extends Controller
 
             $doctor->update($data);
 
+            AdminHistory::create([
+                'admin_id' => auth()->user()->id,
+                'doctor_id' => $doctor->id,
+                'action' => 'edited',
+            ]);
+
             return response()->json(['message' => 'Doctor has been updated successfully', 'doctor' => $doctor], 200);
         }else{
             return response()->json(['error' => 'Doctor not found'], 404);
@@ -92,6 +105,13 @@ class UserController extends Controller
         $doctor=User::find($id);
 
         if($doctor){
+
+            AdminHistory::create([
+                'admin_id' => auth()->user()->id,
+                'doctor_id' => $doctor->id,
+                'action' => 'deleted',
+            ]);
+
             $doctor->delete();
             return response()->json(['doctor has been deleted successfully']);
         }else{
@@ -144,6 +164,29 @@ class UserController extends Controller
             return response()->json(["Dr. " . $doctor->name .  " History" => $response], 200);   
         }else{
             return response()->json(['error' => 'Doctor not found'], 404);
+        }
+    }
+
+    public function getAdminHistory(string $id){
+        $admin = User::find($id);
+        if($admin){
+            $history = collect();
+            $actions = AdminHistory::where('admin_id', $id)->orderByDesc('created_at')->get();;
+            
+            foreach($actions as $action){
+                $doctor = User::withTrashed()->find($action->doctor_id);
+                $history->push([
+                    "action" => $action->action,
+                    "doctor_id" => $action->doctor_id,
+                    "doctor_name" => "Dr. " . $doctor->name,
+                    "date" => $action->created_at->format('d-m-Y'),
+                    "time" => $action->created_at->format('h:i A'),
+                ]);
+            }
+
+            return response()->json($history, 200);
+        }else{
+            return response()->json(['error' => 'Admin not found'], 404);
         }
     }
 }

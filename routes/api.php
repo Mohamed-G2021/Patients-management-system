@@ -54,3 +54,4 @@ Route::post('reset-password', [AuthController::class, 'resetPassword']);
 
 Route::get('patients/{id}/history', [PatientController::class, 'getPatientHistory']);
 Route::get('doctors/{id}/history', [UserController::class, 'getDoctorHistory']);
+Route::get('admins/{id}/history', [UserController::class, 'getAdminHistory']);
