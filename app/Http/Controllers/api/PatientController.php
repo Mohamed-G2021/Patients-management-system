@@ -166,7 +166,7 @@ class PatientController extends Controller
                     "cervix" => $cervix,
                 ]);
             }
-            return response()->json(["patient History" => $response], 200);   
+            return response()->json([$patient->name .  " History" => $response], 200);   
         }else{
             return response()->json(['error' => 'Patient not found'], 404);
         }
