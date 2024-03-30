@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryTests\ObstetricHistoryTest;
 use App\Models\ObstetricTest;
 use Illuminate\Http\Request;
 
@@ -77,36 +76,42 @@ class ObstetricHistoryTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data=$request->validate([
-            'patient_id' =>'required|exists:patients,id',
-            "gravidity"=> "nullable|integer",
-            "parity"=> "nullable|integer",
-            "abortion"=> "nullable|integer",
-            "notes"=> "nullable|string",
-            'investigation_files' => 'nullable',
-            'investigation_files.*'=>'nullable|file',         
-        ]);
+        $test = ObstetricTest::find($id);
+        if($test){
+            $data=$request->validate([
+                'patient_id' =>'required|exists:patients,id',
+                "gravidity"=> "nullable|integer",
+                "parity"=> "nullable|integer",
+                "abortion"=> "nullable|integer",
+                "notes"=> "nullable|string",
+                'investigation_files' => 'nullable',
+                'investigation_files.*'=>'nullable|file',         
+            ]);
 
-        if($request->hasfile('investigation_files')){
-            $filesNames = [];
-            foreach($request->file('investigation_files')  as $investigationFile){
-            $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
+            if($request->hasfile('investigation_files')){
+                $filesNames = [];
+                foreach($request->file('investigation_files')  as $investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName();
+                $filesNames[]=$investigationFileName;
 
-            $investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+                $investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+                }
+                
+                $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
             }
+
+            $data['doctor_id'] = auth()->user()->id;
+
+            $newExamination = ObstetricTest::create($data);
+        
+            return response()->json([
+            'message' => 'Obstetric History Test has been updated successfully',
+            'examination' => $newExamination],
+            200);
             
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+        }else{
+            return response()->json(['error' => 'No examination found'], 404);
         }
-
-        $data['doctor_id'] = auth()->user()->id;
-
-        $newExamination = ObstetricTest::create($data);
-       
-        return response()->json([
-        'message' => 'Obstetric History Test has been updated successfully',
-        'examination' => $newExamination],
-        200);
     }
 
     /**

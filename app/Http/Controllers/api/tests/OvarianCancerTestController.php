@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryTests\OvarianCancerHistoryTest;
 use App\Models\OvarianCancerTest;
 use Illuminate\Http\Request;
 
@@ -67,26 +66,32 @@ class OvarianCancerTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            "breast_cancer_history" => 'nullable|boolean',
-            "relatives_with_ovarian_cancer" => 'nullable|boolean',
-            "gene_mutation_or_lynch_syndrome" => 'nullable|boolean',
-            "tvs_result" => 'nullable|string',
-            "tvs_comment" => 'nullable|string',
-            "ca-125_result" => 'nullable|string',
-            "ca-125_comment" => 'nullable|string',
-            "recommendations" => 'nullable|string',
-        ]);
+        $test = OvarianCancerTest::find($id);
+        if($test){
+            $data = $request->validate([
+                'patient_id' => 'required|exists:patients,id',
+                "breast_cancer_history" => 'nullable|boolean',
+                "relatives_with_ovarian_cancer" => 'nullable|boolean',
+                "gene_mutation_or_lynch_syndrome" => 'nullable|boolean',
+                "tvs_result" => 'nullable|string',
+                "tvs_comment" => 'nullable|string',
+                "ca-125_result" => 'nullable|string',
+                "ca-125_comment" => 'nullable|string',
+                "recommendations" => 'nullable|string',
+            ]);
 
-        $data['doctor_id'] = auth()->user()->id;
+            $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = OvarianCancerTest::create($data);
-       
-        return response()->json([
-        'message' => 'Ovarian Test has been updated successfully',
-        'examination' => $newExamination],
-        200);
+            $newExamination = OvarianCancerTest::create($data);
+        
+            return response()->json([
+            'message' => 'Ovarian Test has been updated successfully',
+            'examination' => $newExamination],
+            200);
+
+        }else{
+            return response()->json(['error' => 'No examination found'], 404);
+        }
     }
 
     /**

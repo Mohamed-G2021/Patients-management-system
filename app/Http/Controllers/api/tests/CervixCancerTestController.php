@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
 use App\Models\CervixCancerTest;
-use App\Models\HistoryTests\CervixCancerHistoryTest;
 use Illuminate\Http\Request;
 
 class CervixCancerTestController extends Controller
@@ -56,7 +55,7 @@ class CervixCancerTestController extends Controller
 
         return response()->json([
             'message' => 'Cervix cancer test has been saved successfully',
-            'examination' => $examination], 201);
+            'examination' => $examination], 200);
     }
 
     /**
@@ -78,38 +77,43 @@ class CervixCancerTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'hpv_vaccine' => 'boolean|nullable',
-            'via_test_result' => 'string|nullable',
-            'via_test_comment' => 'string|nullable',
-            'pap_smear_result' => 'string|nullable',
-            'pap_smear_comment' => 'string|nullable',
-            'recommendations' => 'string|nullable',
-            'investigation_files' => 'nullable',
-            'investigation_files.*'=>'nullable|file',
-        ]);
+        $test = CervixCancerTest::find($id);
+        if($test){
+            $data = $request->validate([
+                'patient_id' => 'required|exists:patients,id',
+                'hpv_vaccine' => 'boolean|nullable',
+                'via_test_result' => 'string|nullable',
+                'via_test_comment' => 'string|nullable',
+                'pap_smear_result' => 'string|nullable',
+                'pap_smear_comment' => 'string|nullable',
+                'recommendations' => 'string|nullable',
+                'investigation_files' => 'nullable',
+                'investigation_files.*'=>'nullable|file',
+            ]);
 
-        if($request->hasfile('investigation_files')){
-            $filesNames = [];
-            foreach($request->file('investigation_files')  as $investigationFile){
-            $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
+            if($request->hasfile('investigation_files')){
+                $filesNames = [];
+                foreach($request->file('investigation_files')  as $investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName();
+                $filesNames[]=$investigationFileName;
 
-            $investigationFile->storeAs('cervix_cancer_test_investigations', $investigationFileName, 'public');
+                $investigationFile->storeAs('cervix_cancer_test_investigations', $investigationFileName, 'public');
+                }
+                
+                $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
             }
-            
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+
+            $data['doctor_id'] = auth()->user()->id;
+
+            $newExamination = CervixCancerTest::create($data);
+
+            return response()->json([
+                'message' => 'Cervix cancer test has been updated successfully',
+                'examination' => $newExamination], 201);
+
+        }else{
+            return response()->json(['error' => 'No examination found'], 404);
         }
-
-        $data['doctor_id'] = auth()->user()->id;
-
-        $newExamination = CervixCancerTest::create($data);
-
-        return response()->json([
-            'message' => 'Cervix cancer test has been updated successfully',
-            'examination' => $newExamination], 201);
-
     }
 
     /**
