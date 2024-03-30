@@ -153,9 +153,9 @@ class PatientController extends Controller
 
                 $response->push([
                     "date" => $generalExamination->created_at->format('d-m-Y'),
-                    "doctor name" => $doctorName,
-                    "personal information" => $personalInformation,
-                    "general examination" => $generalExamination,
+                    "doctor_name" => $doctorName,
+                    "personal_information" => $personalInformation,
+                    "general_examination" => $generalExamination,
                     "gynaecological" => $gynaecological,
                     "obstetric" => $obstetric,
                     "breast" => $breast,
