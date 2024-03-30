@@ -20,23 +20,4 @@ class ObstetricTest extends Model
         'notes',
         'investigation_files',   
     ] ;
-
-    //------------ many to many relationship test with doctor -----------
-    public function doctors(): MorphToMany
-    {
-        return $this->morphToMany(User::class, 'doctor_tests');
-    }
-    
-    //------------ one to many relationship test with patient -----------
-    public function patient(): BelongsTo
-    {
-        return $this->belongsTo(Patient::class);
-    }
-
-
-    //------------ many to many relationship test with history test ----------- 
-    public function historyTest(): HasMany
-    {
-        return $this->hasMany(ObstetricHistoryTest::class, 'test_id','id');
-    }
 }

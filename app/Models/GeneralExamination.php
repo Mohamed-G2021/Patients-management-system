@@ -22,22 +22,4 @@ class GeneralExamination extends Model
         'blood_pressure',
         'investigation_files',
     ];
-
-    //------------ many to many relationship test with doctor -----------
-    public function doctors(): MorphToMany
-    {
-        return $this->morphToMany(User::class, 'doctor_tests');
-    }
-    
-    //------------ one to many relationship test with patient -----------
-    public function patient(): BelongsTo
-    {
-        return $this->belongsTo(Patient::class);
-    }
-
-    //------------ many to many relationship test with history test ----------- 
-    public function historyTest(): HasMany
-    {
-        return $this->hasMany(GeneralExaminationHistory::class, 'test_id','id');
-    }
 }
