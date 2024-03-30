@@ -19,6 +19,11 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('admin');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -34,7 +39,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "password" => "required",
+            "password" => "required|confirmed",
             "email"=> "required|unique:users,email",
         ]);
     
@@ -65,7 +70,7 @@ class UserController extends Controller
         $doctor = User::find($id);
         
         $data = $request->validate([
-            "password" => "required",
+            "password" => "required|confirmed",
             "email"=> "required|unique:users,email,".$doctor->id,
         ]);
 
