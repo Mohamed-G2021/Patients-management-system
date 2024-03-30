@@ -50,6 +50,7 @@ class PatientController extends Controller
         $data['relative_name'] = $request->relative_name;
         $data['relative_phone'] = $request->relative_phone;
         $data['patient_code']=random_int(10000, 99999);
+        $data['doctor_id'] = auth()->user()->id;
 
         $patient = Patient::create($data);
         return response()->json(['message' => 'Patient has been saved successfully', 'patient' => $patient], 200);
@@ -75,26 +76,31 @@ class PatientController extends Controller
     public function update(Request $request, string $id)
     {
         $patient = Patient::find($id);
-
-        $data = $request->validate([
-            "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
-            "name" => "required",
-            "phone_number"=> "required",
-            "date_of_birth"=> "required|date",
-            "marital_state"=> "required",
-            "email" => "nullable|unique:patients,email,".$patient->id,
-        ]);
         
-        $data['patient_id'] = $patient->id;
-        $data['address'] = $request->address;
-        $data['relative_name'] = $request->relative_name;
-        $data['relative_phone'] = $request->relative_phone;
-        $data['patient_code'] = $patient->patient_code;
-        $data['doctor_id'] = auth()->user()->id;
+        if($patient){
+            $data = $request->validate([
+                "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
+                "name" => "required",
+                "phone_number"=> "required",
+                "date_of_birth"=> "required|date",
+                "marital_state"=> "required",
+                "email" => "nullable|unique:patients,email,".$patient->id,
+            ]);
+            
+            $data['age'] = $patient->age;
+            $data['patient_id'] = $patient->id;
+            $data['address'] = $request->address;
+            $data['relative_name'] = $request->relative_name;
+            $data['relative_phone'] = $request->relative_phone;
+            $data['patient_code'] = $patient->patient_code;
+            $data['doctor_id'] = auth()->user()->id;
 
-        $newInformation = PatientPersonalInfoHistory::create($data);
-        
-        return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $newInformation], 200);
+            $newInformation = PatientPersonalInfoHistory::create($data);
+            
+            return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $newInformation], 200);
+        }else{
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
     }
 
     /**
@@ -120,11 +126,19 @@ class PatientController extends Controller
 
     public function getPatientHistory(string $id){
         $generalExaminations = GeneralExamination::where('patient_id', $id)->orderByDesc('created_at')->get();
-        
+
         $response = collect();
+
         foreach ($generalExaminations as $generalExamination) {
             $doctor = $generalExamination->doctor_id;
             $doctorName = User::where('id',$doctor)->first()->name;
+            
+            if($generalExamination == GeneralExamination::where('patient_id', $id)->orderByDesc('created_at')->latest()->first()){
+                $personalInformation = Patient::find($id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            }else{
+                $personalInformation = PatientPersonalInfoHistory::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+            }
+            
             $gynaecological = GynaecologicalTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
             $obstetric = ObstetricTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
             $breast = BreastCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
@@ -137,6 +151,7 @@ class PatientController extends Controller
             $response->push([
                 "date" => $generalExamination->created_at->format('d-m-Y'),
                 "doctor name" => $doctorName,
+                "personal information" => $personalInformation,
                 "general examination" => $generalExamination,
                 "gynaecological" => $gynaecological,
                 "obstetric" => $obstetric,
