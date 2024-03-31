@@ -61,7 +61,11 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-        $patient=Patient::find($id);
+        if(PatientPersonalInfoHistory::where('patient_id', $id)->count() > 0){
+            $patient = PatientPersonalInfoHistory::where('patient_id', $id)->latest()->first();
+        }else{
+            $patient = Patient::find($id);
+        }
         
         if($patient){
             return response()->json($patient);  
@@ -115,7 +119,11 @@ class PatientController extends Controller
 
     public function search(string $patient_code)
     {
-        $patient = Patient::where('patient_code',$patient_code)->first();
+        if(PatientPersonalInfoHistory::where('patient_code', $patient_code)->count() > 0){
+            $patient = PatientPersonalInfoHistory::where('patient_code', $patient_code)->latest()->first();
+        }else{
+            $patient = Patient::where('patient_code',$patient_code)->first();
+        }
         
         if($patient){
             return response()->json($patient);  
