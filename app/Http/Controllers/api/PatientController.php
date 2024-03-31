@@ -41,9 +41,9 @@ class PatientController extends Controller
             "national_id"=> "required|unique:patients,national_id|digits:14",
             "name" => "required",
             "phone_number"=> "required",
-            "date_of_birth"=> "required|date",
+            "date_of_birth"=> "required",
             "marital_state"=> "required",    
-            "email" => "unique:patients,email",       
+            "email" => "nullable|unique:patients,email",       
         ]);
         
         $data['address'] = $request->address;
@@ -82,7 +82,7 @@ class PatientController extends Controller
                 "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
                 "name" => "required",
                 "phone_number"=> "required",
-                "date_of_birth"=> "required|date",
+                "date_of_birth"=> "required",
                 "marital_state"=> "required",
                 "email" => "nullable|unique:patients,email,".$patient->id,
             ]);
