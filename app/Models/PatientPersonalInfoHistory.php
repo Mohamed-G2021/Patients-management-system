@@ -21,6 +21,7 @@ class PatientPersonalInfoHistory extends Model
         'address',
         'marital_state',
         'relative_name',
-        'relative_phone'
+        'relative_phone',
+        'email'
     ];
 }
