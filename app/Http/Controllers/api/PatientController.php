@@ -63,6 +63,7 @@ class PatientController extends Controller
     {
         if(PatientPersonalInfoHistory::where('patient_id', $id)->count() > 0){
             $patient = PatientPersonalInfoHistory::where('patient_id', $id)->latest()->first();
+            $patient->id = Patient::find($id)->id;
         }else{
             $patient = Patient::find($id);
         }
@@ -101,6 +102,8 @@ class PatientController extends Controller
 
             $newInformation = PatientPersonalInfoHistory::create($data);
             
+            $newInformation->id = $patient->id;
+            
             return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $newInformation], 200);
         }else{
             return response()->json(['error' => 'Patient not found'], 404);
@@ -121,6 +124,7 @@ class PatientController extends Controller
     {
         if(PatientPersonalInfoHistory::where('patient_code', $patient_code)->count() > 0){
             $patient = PatientPersonalInfoHistory::where('patient_code', $patient_code)->latest()->first();
+            $patient->id = Patient::where('patient_code', $patient_code)->first()->id;
         }else{
             $patient = Patient::where('patient_code',$patient_code)->first();
         }
@@ -177,6 +181,29 @@ class PatientController extends Controller
             return response()->json( $response, 200);   
         }else{
             return response()->json(['error' => 'Patient not found'], 404);
+        }
+    }
+
+    public function getPatientByNationalId(Request $request,string $national_id){
+        
+        if(strlen($national_id) != 14){
+            return response()->json(['error' => 'National ID is not valid'], 404);
+        }else{
+            if(Patient::where('national_id', $national_id)->count() > 0){
+                $originalPatient = Patient::where('national_id', $national_id)->first();
+                
+                if(PatientPersonalInfoHistory::where('patient_code', $originalPatient->patient_code)->count() > 0){
+                    $patient = PatientPersonalInfoHistory::where('patient_code', $originalPatient->patient_code)->latest()->first();
+                    $patient->id = Patient::where('patient_code', $patient->patient_code)->first()->id;
+                }else{
+                    $patient = Patient::where('patient_code',$originalPatient->patient_code)->first();
+                }
+
+                return response()->json($patient);  
+            
+            }else{
+                return response()->json(['error' => 'Patient not found'], 404);
+            }
         }
     }
 }
