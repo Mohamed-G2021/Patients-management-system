@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BreastCancerTest;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BreastCancerController extends Controller
 {
@@ -69,15 +70,15 @@ class BreastCancerController extends Controller
         }
 
         if($request->hasfile('investigation_files')){
-            $filesNames = [];
+            $filePathes = [];
+            
             foreach($request->file('investigation_files')  as $investigationFile){
             $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
-
-            $investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
+            $storedFile =$investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
+            $filePathes[]=Storage::url($storedFile);
             }
-            
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+
+            $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
         }
 
         $data['doctor_id'] = auth()->user()->id;
@@ -151,15 +152,15 @@ class BreastCancerController extends Controller
             }
 
             if($request->hasfile('investigation_files')){
-                $filesNames = [];
+                $filePathes = [];
+                
                 foreach($request->file('investigation_files')  as $investigationFile){
                 $investigationFileName = $investigationFile->getClientOriginalName();
-                $filesNames[]=$investigationFileName;
-
-                $investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
+                $storedFile =$investigationFile->storeAs('breast_cancer_investigations', $investigationFileName, 'public');
+                $filePathes[]=Storage::url($storedFile);
                 }
-                
-                $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+    
+                $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
             }
 
             $data['doctor_id'] = auth()->user()->id;

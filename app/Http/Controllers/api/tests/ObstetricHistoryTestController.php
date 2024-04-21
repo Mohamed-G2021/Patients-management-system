@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\tests;
 use App\Http\Controllers\Controller;
 use App\Models\ObstetricTest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ObstetricHistoryTestController extends Controller
 {
@@ -36,15 +37,15 @@ class ObstetricHistoryTestController extends Controller
         ]);
 
         if($request->hasfile('investigation_files')){
-            $filesNames = [];
+            $filePathes = [];
+            
             foreach($request->file('investigation_files')  as $investigationFile){
             $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
-
-            $investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+            $storedFile =$investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+            $filePathes[]=Storage::url($storedFile);
             }
-            
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+
+            $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
         }
         
         $data['doctor_id'] = auth()->user()->id;
@@ -89,15 +90,15 @@ class ObstetricHistoryTestController extends Controller
             ]);
 
             if($request->hasfile('investigation_files')){
-                $filesNames = [];
+                $filePathes = [];
+                
                 foreach($request->file('investigation_files')  as $investigationFile){
                 $investigationFileName = $investigationFile->getClientOriginalName();
-                $filesNames[]=$investigationFileName;
-
-                $investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+                $storedFile =$investigationFile->storeAs('obstetric_history_test_investigations', $investigationFileName, 'public');
+                $filePathes[]=Storage::url($storedFile);
                 }
-                
-                $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+    
+                $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
             }
 
             $data['doctor_id'] = auth()->user()->id;

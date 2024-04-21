@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\tests;
 use App\Http\Controllers\Controller;
 use App\Models\GeneralExamination;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 class GeneralExaminationController extends Controller
 {
     function __construct()
@@ -35,17 +36,17 @@ class GeneralExaminationController extends Controller
                 'investigation_files.*'=>'nullable|file',
             ]);
 
-        if($request->hasfile('investigation_files')){
-            $filesNames = [];
-            foreach($request->file('investigation_files')  as $investigationFile){
-            $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
-
-            $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
+            if($request->hasfile('investigation_files')){
+                $filePathes = [];
+                
+                foreach($request->file('investigation_files')  as $investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName();
+                $storedFile =$investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
+                $filePathes[]=Storage::url($storedFile);
+                }
+    
+                $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
             }
-            
-            $data['investigation_files'] = json_encode($filesNames);
-        }
 
         $data['doctor_id'] = auth()->user()->id;
         $examination = GeneralExamination::create($data);
@@ -88,17 +89,17 @@ class GeneralExaminationController extends Controller
                     'investigation_files.*'=>'nullable|file',
                 ]);
             
-            if($request->hasfile('investigation_files')){
-                $filesNames = [];
-                foreach($request->file('investigation_files')  as $investigationFile){
-                $investigationFileName = $investigationFile->getClientOriginalName();
-                $filesNames[]=$investigationFileName;
-
-                $investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
+                if($request->hasfile('investigation_files')){
+                    $filePathes = [];
+                    
+                    foreach($request->file('investigation_files')  as $investigationFile){
+                    $investigationFileName = $investigationFile->getClientOriginalName();
+                    $storedFile =$investigationFile->storeAs('general_examination_investigations', $investigationFileName, 'public');
+                    $filePathes[]=Storage::url($storedFile);
+                    }
+        
+                    $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
                 }
-                
-                $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
-            }
 
             $data['doctor_id'] = auth()->user()->id;
 

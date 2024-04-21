@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\tests;
 use App\Http\Controllers\Controller;
 use App\Models\PreEclampsiaTest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PreEclampsiaTestController extends Controller
 {
@@ -36,15 +37,15 @@ class PreEclampsiaTestController extends Controller
         ]);
 
         if($request->hasfile('investigation_files')){
-            $filesNames = [];
-            foreach($request->file('investigation_files')  as $investigationFile){
-            $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
-
-            $investigationFile->storeAs('pre-eclampsia_test_investigations', $investigationFileName, 'public');
-            }
+            $filePathes = [];
             
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+            foreach($request->file('investigation_files')  as $investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName();
+                $storedFile =$investigationFile->storeAs('preeclampsia_test_investigations', $investigationFileName, 'public');
+                $filePathes[]=Storage::url($storedFile);
+            }
+
+            $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
         }
         
         $data['doctor_id'] = auth()->user()->id;
@@ -89,15 +90,15 @@ class PreEclampsiaTestController extends Controller
             ]);
 
             if($request->hasfile('investigation_files')){
-                $filesNames = [];
-                foreach($request->file('investigation_files')  as $investigationFile){
-                $investigationFileName = $investigationFile->getClientOriginalName();
-                $filesNames[]=$investigationFileName;
-
-                $investigationFile->storeAs('pre-eclampsia_test_investigations', $investigationFileName, 'public');
-                }
+                $filePathes = [];
                 
-                $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+                foreach($request->file('investigation_files')  as $investigationFile){
+                    $investigationFileName = $investigationFile->getClientOriginalName();
+                    $storedFile =$investigationFile->storeAs('preeclampsia_test_investigations', $investigationFileName, 'public');
+                    $filePathes[]=Storage::url($storedFile);
+                }
+    
+                $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
             }
 
             $data['doctor_id'] = auth()->user()->id;

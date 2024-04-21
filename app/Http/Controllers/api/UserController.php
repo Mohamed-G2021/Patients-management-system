@@ -161,7 +161,7 @@ class UserController extends Controller
                     "cervix" => $cervix,
                 ]);
             }
-            return response()->json(["Dr. " . $doctor->name .  " History" => $response], 200);   
+            return response()->json($response, 200);   
         }else{
             return response()->json(['error' => 'Doctor not found'], 404);
         }
