@@ -23,7 +23,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('admin');
+        $this->middleware('admin')->except(['getDoctorHistory']);
     }
     /**
      * Display a listing of the resource.
