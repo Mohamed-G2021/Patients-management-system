@@ -148,9 +148,9 @@ class UserController extends Controller
 
                 $response->push([
                     "date" => $generalExamination->created_at->format('d-m-Y'),
-                    "patient name" => $patientName,
-                    "personal information" => $personalInformation,
-                    "general examination" => $generalExamination,
+                    "patient_name" => $patientName,
+                    "personal_information" => $personalInformation,
+                    "general_examination" => $generalExamination,
                     "gynaecological" => $gynaecological,
                     "obstetric" => $obstetric,
                     "breast" => $breast,
