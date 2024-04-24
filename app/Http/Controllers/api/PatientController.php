@@ -180,7 +180,7 @@ class PatientController extends Controller
             }
             return response()->json( $response, 200);   
         }else{
-            return response()->json(['error' => 'Patient not found'], 404);
+            return response()->json(null, 200);
         }
     }
 

@@ -17,6 +17,7 @@ use App\Models\PreEclampsiaTest;
 use App\Models\User;
 use App\Models\UterineCancerTest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -39,9 +40,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated_data = $request->validate([
             "password" => "required|confirmed",
-            "email"=> "required|unique:users,email",
+            "name" => "required",
+            "phone_number" => "required",
+            "email" => [
+                'required',
+                Rule::unique('users')->where(function ($query) {
+                    return $query->whereNull('deleted_at');
+                }),
+            ],
         ]);
     
         $doctor = User::create($request->all());
@@ -104,8 +112,7 @@ class UserController extends Controller
     {
         $doctor=User::find($id);
 
-        if($doctor){
-
+        if($doctor && $doctor->role == 'doctor'){
             AdminHistory::create([
                 'admin_id' => auth()->user()->id,
                 'doctor_id' => $doctor->id,
@@ -163,7 +170,7 @@ class UserController extends Controller
             }
             return response()->json($response, 200);   
         }else{
-            return response()->json(['error' => 'Doctor not found'], 404);
+            return response()->json(null, 200);
         }
     }
 
@@ -186,7 +193,7 @@ class UserController extends Controller
 
             return response()->json($history, 200);
         }else{
-            return response()->json(['error' => 'Admin not found'], 404);
+            return response()->json(null, 200);        
         }
     }
 }

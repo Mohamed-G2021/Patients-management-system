@@ -101,7 +101,7 @@ class OsteoporosisTestController extends Controller
         if($examination){
             return response()->json($examination);  
         }else{
-            return response()->json(['error' => 'No examinations found for this patient'], 404);
+            return response()->json(null, 200);
         }
     }
 
