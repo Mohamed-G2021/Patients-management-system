@@ -62,11 +62,18 @@ class BreastCancerController extends Controller
         }
     
         if($points >= 2 && $points <= 4){
-            $data['recommendations'] = 'Breast self exam: monthly, Breast specialist exam : Once a year';
+            $data['recommendations'] = 
+            'Breast self exam: monthly
+            Breast specialist exam : Once a year';
         }elseif($points >= 5 && $points <= 6){
-            $data['recommendations'] = 'Breast self exam : monthly, Breast specialist exam Once a year, Mamography : every 2 years (at age 40-70 only)';
+            $data['recommendations'] = 
+            'Breast self exam : monthly
+            Breast specialist exam Once a year
+            Mamography : every 2 years (at age 40-70 only)';
         }elseif($points >= 7 && $points <= 8){
-            $data['recommendations'] = 'Breast self exam : monthly, Breast specialist exam : twice a year, Mamography : every year (at age 40-70 Only)';
+            $data['recommendations'] = 'Breast self exam : monthly
+            Breast specialist exam : twice a year
+            Mamography : every year (at age 40-70 Only)';
         }
 
         if($request->hasfile('investigation_files')){
