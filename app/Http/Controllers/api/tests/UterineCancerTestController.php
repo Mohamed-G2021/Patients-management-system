@@ -28,7 +28,7 @@ class UterineCancerTestController extends Controller
     {
         $data = $request->validate([
             "patient_id"=> "required|exists:patients,id",
-            "lynch_syndrome"=> "nullable|boolean|in:+ve,-ve",
+            "lynch_syndrome"=> "nullable|in:+ve,-ve",
             "irregular_bleeding"=> "nullable|boolean",
             "tvs_perimetrium_result"=> "nullable|string",
             "tvs_myometrium_result"=> "nullable|string",
@@ -87,7 +87,7 @@ class UterineCancerTestController extends Controller
         if($test){
             $data = $request->validate([
                 "patient_id"=> "required|exists:patients,id",
-                "lynch_syndrome"=> "nullable|boolean|in:+ve,-ve",
+                "lynch_syndrome"=> "nullable|in:+ve,-ve",
                 "irregular_bleeding"=> "nullable|boolean",
                 "tvs_perimetrium_result"=> "nullable|string",
                 "tvs_myometrium_result"=> "nullable|string",
