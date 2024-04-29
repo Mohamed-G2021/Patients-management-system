@@ -144,14 +144,14 @@ class UserController extends Controller
                     $personalInformation = PatientPersonalInfoHistory::where('patient_id', $patient)->where('doctor_id', $id)->whereDate('created_at', $generalExamination->created_at)->first();
                 }
                 
-                $gynaecological = GynaecologicalTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $obstetric = ObstetricTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $breast = BreastCancerTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $ovarian = OvarianCancerTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $preEclampsia = PreEclampsiaTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $uterine = UterineCancerTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $osteoporosis = OsteoporosisTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
-                $cervix = CervixCancerTest::where('doctor_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $gynaecological = GynaecologicalTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $obstetric = ObstetricTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $breast = BreastCancerTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $ovarian = OvarianCancerTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $preEclampsia = PreEclampsiaTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $uterine = UterineCancerTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $osteoporosis = OsteoporosisTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $cervix = CervixCancerTest::where('patient_id', $patient)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
 
                 $response->push([
                     "date" => $generalExamination->created_at->format('d-m-Y'),
