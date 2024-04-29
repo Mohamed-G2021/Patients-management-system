@@ -129,7 +129,7 @@ class UserController extends Controller
     public function getDoctorHistory(string $id){
         $user = User::find($id); 
         
-        if($user && $user->role == 'doctor'){
+        if($user && $user->role == 'doctor' && $user->id == auth()->user()->id){
             $generalExaminations = GeneralExamination::where('doctor_id', $id)->orderByDesc('created_at')->get();
 
             $response = collect();
