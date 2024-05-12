@@ -69,7 +69,8 @@ class CervixCancerTestController extends Controller
         if($examination){
             return response()->json($examination);  
         }else{
-            return response()->json(null, 200);        }
+            return response()->json(null, 200);        
+        }
     }
 
     /**

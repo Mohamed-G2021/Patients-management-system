@@ -51,7 +51,7 @@ class UserController extends Controller
                 }),
             ],
         ]);
-    
+
         $doctor = User::create($request->all());
 
         AdminHistory::create([
@@ -59,7 +59,7 @@ class UserController extends Controller
             'doctor_id' => $doctor->id,
             'action' => 'added',
         ]);
-    
+
         return response()->json(['message' => 'Doctor has been saved successfully', 'doctor' => $doctor], 200);
     }
 
@@ -69,9 +69,9 @@ class UserController extends Controller
     public function show(string $id)
     {
         $doctor = User::find($id);
-        
+
         if($doctor){
-            return response()->json($doctor);  
+            return response()->json($doctor);
         }else{
             return response()->json(['error' => 'Doctor not found'], 404);
         }
@@ -83,9 +83,11 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $doctor = User::find($id);
-        
+
         if($doctor){
             $data = $request->validate([
+                "name" => "string",
+                "phone_number" => "string",
                 "password" => "required|confirmed",
                 "email"=> "required|unique:users,email,".$doctor->id,
             ]);
@@ -102,7 +104,7 @@ class UserController extends Controller
         }else{
             return response()->json(['error' => 'Doctor not found'], 404);
         }
-        
+
     }
 
     /**
@@ -127,8 +129,8 @@ class UserController extends Controller
     }
 
     public function getDoctorHistory(string $id){
-        $user = User::find($id); 
-        
+        $user = User::find($id);
+
         if($user && $user->role == 'doctor' && $id == auth()->user()->id){
             $generalExaminations = GeneralExamination::where('doctor_id', $id)->orderByDesc('created_at')->get();
 
@@ -137,13 +139,13 @@ class UserController extends Controller
             foreach ($generalExaminations as $generalExamination) {
                 $patient = $generalExamination->patient_id;
                 $patientName = Patient::find($patient)->name;
- 
+
                 if($generalExamination == GeneralExamination::where('doctor_id', $id)->orderByDesc('created_at')->latest()->first()){
                     $personalInformation = Patient::find($patient)->where('doctor_id', $id)->whereDate('created_at', $generalExamination->created_at)->first();
                 }else{
                     $personalInformation = PatientPersonalInfoHistory::where('patient_id', $patient)->where('doctor_id', $id)->whereDate('created_at', $generalExamination->created_at)->first();
                 }
-                
+
                 $gynaecological = GynaecologicalTest::where('patient_id', $patient)->where('doctor_id', $id)->whereDate('created_at', $generalExamination->created_at)->first();
                 $obstetric = ObstetricTest::where('patient_id', $patient)->where('doctor_id', $id)->whereDate('created_at', $generalExamination->created_at)->first();
                 $breast = BreastCancerTest::where('patient_id', $patient)->where('doctor_id', $id)->whereDate('created_at', $generalExamination->created_at)->first();
@@ -168,7 +170,7 @@ class UserController extends Controller
                     "cervix" => $cervix,
                 ]);
             }
-            return response()->json($response, 200);   
+            return response()->json($response, 200);
         }else{
             return response()->json(null, 200);
         }
@@ -179,7 +181,7 @@ class UserController extends Controller
         if($admin){
             $history = collect();
             $actions = AdminHistory::where('admin_id', $id)->orderByDesc('created_at')->get();;
-            
+
             foreach($actions as $action){
                 $doctor = User::withTrashed()->find($action->doctor_id);
                 $history->push([
@@ -193,7 +195,7 @@ class UserController extends Controller
 
             return response()->json($history, 200);
         }else{
-            return response()->json(null, 200);        
+            return response()->json(null, 200);
         }
     }
 }
