@@ -17,6 +17,10 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('breast_cancer_history')->nullable();
             $table->boolean('relatives_with_ovarian_cancer')->nullable();
             $table->boolean('gene_mutation_or_lynch_syndrome')->nullable();

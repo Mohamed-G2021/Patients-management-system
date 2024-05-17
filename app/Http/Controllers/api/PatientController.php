@@ -3,12 +3,26 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BreastCancerTest;
+use App\Models\CervixCancerTest;
+use App\Models\GeneralExamination;
+use App\Models\GynaecologicalTest;
+use App\Models\ObstetricTest;
+use App\Models\OsteoporosisTest;
+use App\Models\OvarianCancerTest;
 use App\Models\Patient;
 use App\Models\PatientPersonalInfoHistory;
+use App\Models\PreEclampsiaTest;
+use App\Models\User;
+use App\Models\UterineCancerTest;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['search', 'show']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -26,16 +40,17 @@ class PatientController extends Controller
         $data = $request->validate([
             "national_id"=> "required|unique:patients,national_id|digits:14",
             "name" => "required",
-            "age"=>"required",
             "phone_number"=> "required",
             "date_of_birth"=> "required",
-            "marital_state"=> "required",            
+            "marital_state"=> "required",    
+            "email" => "nullable|unique:patients,email",       
         ]);
         
         $data['address'] = $request->address;
         $data['relative_name'] = $request->relative_name;
         $data['relative_phone'] = $request->relative_phone;
         $data['patient_code']=random_int(10000, 99999);
+        $data['doctor_id'] = auth()->user()->id;
 
         $patient = Patient::create($data);
         return response()->json(['message' => 'Patient has been saved successfully', 'patient' => $patient], 200);
@@ -46,7 +61,12 @@ class PatientController extends Controller
      */
     public function show(string $id)
     {
-        $patient=Patient::find($id);
+        if(PatientPersonalInfoHistory::where('patient_id', $id)->count() > 0){
+            $patient = PatientPersonalInfoHistory::where('patient_id', $id)->latest()->first();
+            $patient->id = Patient::find($id)->id;
+        }else{
+            $patient = Patient::find($id);
+        }
         
         if($patient){
             return response()->json($patient);  
@@ -61,27 +81,33 @@ class PatientController extends Controller
     public function update(Request $request, string $id)
     {
         $patient = Patient::find($id);
-
-        $data = $request->validate([
-            "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
-            "name" => "required",
-            "age"=>"required",
-            "phone_number"=> "required",
-            "date_of_birth"=> "required",
-            "marital_state"=> "required",
-        ]);
         
-        $data['address'] = $request->address;
-        $data['relative_name'] = $request->relative_name;
-        $data['relative_phone'] = $request->relative_phone;
+        if($patient){
+            $data = $request->validate([
+                "national_id"=> "digits:14|required|unique:patients,national_id,".$patient->id,
+                "name" => "required",
+                "phone_number"=> "required",
+                "date_of_birth"=> "required",
+                "marital_state"=> "required",
+                "email" => "nullable|unique:patients,email,".$patient->id,
+            ]);
+            
+            $data['age'] = $patient->age;
+            $data['patient_id'] = $patient->id;
+            $data['address'] = $request->address;
+            $data['relative_name'] = $request->relative_name;
+            $data['relative_phone'] = $request->relative_phone;
+            $data['patient_code'] = $patient->patient_code;
+            $data['doctor_id'] = auth()->user()->id;
 
-        $data['patient_id'] = $patient->id;
-        $data['patient_code'] = $patient->patient_code;
-        $data['doctor_id'] = 1;
-
-        $newInformation = PatientPersonalInfoHistory::create($data);
-        
-        return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $newInformation], 200);
+            $newInformation = PatientPersonalInfoHistory::create($data);
+            
+            $newInformation->id = $patient->id;
+            
+            return response()->json(['message' => 'Patient has been updated successfully', 'patient' => $newInformation], 200);
+        }else{
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
     }
 
     /**
@@ -94,14 +120,90 @@ class PatientController extends Controller
         return response()->json(['patient has been deleted successfully']);
     }
 
-    public function Search(string $patient_code)
+    public function search(string $patient_code)
     {
-        $patient = Patient::where('patient_code',$patient_code)->first();
+        if(PatientPersonalInfoHistory::where('patient_code', $patient_code)->count() > 0){
+            $patient = PatientPersonalInfoHistory::where('patient_code', $patient_code)->latest()->first();
+            $patient->id = Patient::where('patient_code', $patient_code)->first()->id;
+        }else{
+            $patient = Patient::where('patient_code',$patient_code)->first();
+        }
         
         if($patient){
             return response()->json($patient);  
         }else{
             return response()->json(['error' => 'Patient not found'], 404);
+        }
+    }
+
+    public function getPatientHistory(string $id){
+        $patient = Patient::find($id); 
+        
+        if($patient){
+            $generalExaminations = GeneralExamination::where('patient_id', $id)->orderByDesc('created_at')->get();
+
+            $response = collect();
+
+            foreach ($generalExaminations as $generalExamination) {
+                $doctor = $generalExamination->doctor_id;
+                $doctorName = User::where('id',$doctor)->first()->name;
+                
+                if($generalExamination == GeneralExamination::where('patient_id', $id)->orderByDesc('created_at')->latest()->first()){
+                    $personalInformation = Patient::find($id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                }else{
+                    $personalInformation = PatientPersonalInfoHistory::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                }
+                
+                $gynaecological = GynaecologicalTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $obstetric = ObstetricTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $breast = BreastCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $ovarian = OvarianCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $preEclampsia = PreEclampsiaTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $uterine = UterineCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $osteoporosis = OsteoporosisTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+                $cervix = CervixCancerTest::where('patient_id', $id)->where('doctor_id', $doctor)->whereDate('created_at', $generalExamination->created_at)->first();
+
+                $response->push([
+                    "date" => $generalExamination->created_at->format('d-m-Y'),
+                    "doctor_name" => $doctorName,
+                    "personal_information" => $personalInformation,
+                    "general_examination" => $generalExamination,
+                    "gynaecological" => $gynaecological,
+                    "obstetric" => $obstetric,
+                    "breast" => $breast,
+                    "ovarian" => $ovarian,
+                    "preEclampsia" => $preEclampsia,
+                    "uterine" => $uterine,
+                    "osteoporosis" => $osteoporosis,
+                    "cervix" => $cervix,
+                ]);
+            }
+            return response()->json( $response, 200);   
+        }else{
+            return response()->json(null, 200);
+        }
+    }
+
+    public function getPatientByNationalId(Request $request,string $national_id){
+        
+        if(strlen($national_id) != 14){
+            return response()->json(['error' => 'National ID is not valid'], 404);
+        }else{
+            if(Patient::where('national_id', $national_id)->count() > 0){
+                $originalPatient = Patient::where('national_id', $national_id)->first();
+                
+                if(PatientPersonalInfoHistory::where('patient_code', $originalPatient->patient_code)->count() > 0){
+                    $patient = PatientPersonalInfoHistory::where('patient_code', $originalPatient->patient_code)->latest()->first();
+                    $patient->id = Patient::where('patient_code', $patient->patient_code)->first()->id;
+                }else{
+                    $patient = Patient::where('patient_code',$originalPatient->patient_code)->first();
+                }
+
+                return response()->json($patient);  
+            
+            }else{
+                return response()->json(['error' => 'Patient not found'], 404);
+            }
         }
     }
 }

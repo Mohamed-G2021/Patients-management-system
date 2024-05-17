@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctor_patients', function (Blueprint $table) {
+        Schema::create('admin_histories', function (Blueprint $table) {
             $table->id();
+            $table->integer('admin_id');
             $table->foreignId('doctor_id')
             ->constrained('users')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
-            $table->foreignId('patient_id')
-            ->constrained('patients')
-            ->onUpdate('cascade')
-            ->onDelete('cascade');
+            ->onUpdate('cascade');
+            $table->enum('action', ['added', 'edited', 'deleted']);
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctor_patients');
+        Schema::dropIfExists('admin_histories');
     }
 };

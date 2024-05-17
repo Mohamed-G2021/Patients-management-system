@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryTests\UterineCancerHistoryTest;
 use App\Models\UterineCancerTest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UterineCancerTestController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['show']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -24,7 +28,7 @@ class UterineCancerTestController extends Controller
     {
         $data = $request->validate([
             "patient_id"=> "required|exists:patients,id",
-            "lynch_syndrome"=> "nullable|boolean|in:+ve,-ve",
+            "lynch_syndrome"=> "nullable|in:+ve,-ve",
             "irregular_bleeding"=> "nullable|boolean",
             "tvs_perimetrium_result"=> "nullable|string",
             "tvs_myometrium_result"=> "nullable|string",
@@ -39,17 +43,19 @@ class UterineCancerTestController extends Controller
         ]);
 
         if($request->hasfile('investigation_files')){
-            $filesNames = [];
+            $filePathes = [];
+            
             foreach($request->file('investigation_files')  as $investigationFile){
             $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
-
-            $investigationFile->storeAs('uterine_cancer_test_investigations', $investigationFileName, 'public');
+            $storedFile =$investigationFile->storeAs('uterince_cancer_test_investigations', $investigationFileName, 'public');
+            $filePathes[]=Storage::url($storedFile);
             }
-            
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
+
+            $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
         }
-    
+        
+        $data['doctor_id'] = auth()->user()->id;
+
         $test = UterineCancerTest::create($data);
       
         return response()->json([
@@ -61,14 +67,14 @@ class UterineCancerTestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $pateint_id)
     {
-        $examination = UterineCancerTest::find($id);
+        $examination = UterineCancerTest::where('patient_id',$pateint_id)->latest()->first();
 
         if($examination){
             return response()->json($examination);  
         }else{
-            return response()->json(['error' => 'Test not found'], 404);
+            return response()->json(null, 200);
         }
     }
 
@@ -77,44 +83,47 @@ class UterineCancerTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            "patient_id"=> "required|exists:patients,id",
-            "lynch_syndrome"=> "nullable|boolean|in:+ve,-ve",
-            "irregular_bleeding"=> "nullable|boolean",
-            "tvs_perimetrium_result"=> "nullable|string",
-            "tvs_myometrium_result"=> "nullable|string",
-            "tvs_endometrium_result"=> "nullable|string",
-            "biopsy_result"=> "nullable|string",
-            "biopsy_comment"=> "nullable|string",
-            "tvs_perimetrium_comment"=> "nullable|string",
-            "tvs_myometrium_comment"=> "nullable|string",
-            "tvs_endometrium_comment"=> "nullable|string",
-            "investigation_files"=> "nullable",
-            "investigation_files.*"=> "nullable|file",
-        ]);
+        $test = UterineCancerTest::find($id); 
+        if($test){
+            $data = $request->validate([
+                "patient_id"=> "required|exists:patients,id",
+                "lynch_syndrome"=> "nullable|in:+ve,-ve",
+                "irregular_bleeding"=> "nullable|boolean",
+                "tvs_perimetrium_result"=> "nullable|string",
+                "tvs_myometrium_result"=> "nullable|string",
+                "tvs_endometrium_result"=> "nullable|string",
+                "biopsy_result"=> "nullable|string",
+                "biopsy_comment"=> "nullable|string",
+                "tvs_perimetrium_comment"=> "nullable|string",
+                "tvs_myometrium_comment"=> "nullable|string",
+                "tvs_endometrium_comment"=> "nullable|string",
+                "investigation_files"=> "nullable",
+                "investigation_files.*"=> "nullable|file",
+            ]);
 
-        if($request->hasfile('investigation_files')){
-            $filesNames = [];
-            foreach($request->file('investigation_files')  as $investigationFile){
-            $investigationFileName = $investigationFile->getClientOriginalName();
-            $filesNames[]=$investigationFileName;
-
-            $investigationFile->storeAs('uterine_cancer_test_investigations', $investigationFileName, 'public');
-            }
-            
-            $data['investigation_files'] = json_encode($filesNames, JSON_UNESCAPED_UNICODE);
-        }
+            if($request->hasfile('investigation_files')){
+                $filePathes = [];
+                
+                foreach($request->file('investigation_files')  as $investigationFile){
+                $investigationFileName = $investigationFile->getClientOriginalName();
+                $storedFile =$investigationFile->storeAs('uterince_cancer_test_investigations', $investigationFileName, 'public');
+                $filePathes[]=Storage::url($storedFile);
+                }
     
-        $oldExamination = UterineCancerTest::find($id);
-        $data['test_id'] = $oldExamination->id;
-        $data['doctor_id'] = 1;
+                $data['investigation_files'] = json_encode($filePathes, JSON_UNESCAPED_UNICODE);
+            }
+        
+            $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = UterineCancerHistoryTest::create($data);
-       
-        return response()->json([
-        'message' => 'Uterine Cancer Test has been updated successfully',
-        'examination' => $newExamination],
-        200);
+            $newExamination = UterineCancerTest::create($data);
+        
+            return response()->json([
+            'message' => 'Uterine Cancer Test has been updated successfully',
+            'examination' => $newExamination],
+            200);
+        }else{
+            return response()->json(['error' => 'No examination found'], 404);
+        }
     }
 
     /**

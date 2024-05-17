@@ -17,6 +17,10 @@ return new class extends Migration
             ->constrained('patients')
             ->onUpdate('cascade')
             ->onDelete('cascade');
+            $table->foreignId('doctor_id')
+            ->constrained('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->boolean('history_of_pre-eclampsia')->nullable();
             $table->integer('number_of_pregnancies_with_pe')->nullable();
             $table->string('date_of_pregnancies_with_pe')->nullable();

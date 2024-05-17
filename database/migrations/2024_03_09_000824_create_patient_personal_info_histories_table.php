@@ -21,13 +21,14 @@ return new class extends Migration
             ->constrained('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('national_id')->required()->unique();
+            $table->string('national_id')->required();
             $table->string('name')->required();
             $table->integer('age')->required();
             $table->string('phone_number')->required();
-            $table->integer('patient_code')->unique()->required();
+            $table->integer('patient_code')->required();
             $table->string('date_of_birth')->required();
             $table->string('address')->nullable();
+            $table->string('email')->nullable();
             $table->string('marital_state')->required();
             $table->string('relative_name')->nullable();
             $table->string('relative_phone')->nullable();

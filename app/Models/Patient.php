@@ -2,77 +2,31 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Patient extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'doctor_id',
         'national_id',
         'name',
-        'age',
         'phone_number',
         'patient_code',
         'date_of_birth',
         'address',
         'marital_state',
         'relative_name',
-        'relative_phone'
+        'relative_phone',
+        'email'
     ];
 
-    //------------------- many to many patients with doctors ---------------------
-    public function doctors(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'doctor_patients','patient_id','id');
-    }
-    //------------------------------------------------------------------------------------
+    protected $appends = ['age'];
 
-    // -------------- one to many patients with test ---------------------------------
-    public function generaLexaminationTests(): HasMany
+    public function getAgeAttribute()
     {
-        return $this->hasMany(GeneralExamination::class, 'patient_id','id');
+    return Carbon::parse($this->attributes['date_of_birth'])->age;
     }
-
-    public function GynaecologicalTests(): HasMany
-    {
-        return $this->hasMany(GynaecologicalTest::class, 'patient_id','id');
-    }
-    
-    public function ObstetricTests(): HasMany
-    {
-        return $this->hasMany(ObstetricTest::class,  'patient_id','id');
-    }
-
-    public function CervixCancerTests(): HasMany
-    {
-        return $this->hasMany(CervixCancerTest::class,  'patient_id','id');
-    }
-
-    public function BreastCancerTests(): HasMany
-    {
-        return $this->hasMany(BreastCancerTest::class,  'patient_id','id');
-    }
-
-    public function OvarianCancerTests(): HasMany
-    {
-        return $this->hasMany(OvarianCancerTest::class,  'patient_id','id');
-    }
-
-    public function UterineCancerTests(): HasMany
-    {
-        return $this->hasMany(UterineCancerTest::class,  'patient_id','id');
-    }
-
-    public function OsteoporosisTests(): HasMany
-    {
-        return $this->hasMany(OsteoporosisTest::class,  'patient_id','id');
-    }
-
-    public function PreEclampsiaTests(): HasMany
-    {
-        return $this->hasMany(PreEclampsiaTest::class,  'patient_id','id');
-    }
-    //----------------------------- end  -----------------------------------
 }

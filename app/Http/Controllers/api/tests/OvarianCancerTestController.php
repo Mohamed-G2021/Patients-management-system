@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\api\tests;
 
 use App\Http\Controllers\Controller;
-use App\Models\HistoryTests\OvarianCancerHistoryTest;
 use App\Models\OvarianCancerTest;
 use Illuminate\Http\Request;
 
 class OvarianCancerTestController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['show']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -34,6 +37,8 @@ class OvarianCancerTestController extends Controller
             "recommendations" => 'nullable|string',
         ]);
 
+        $data['doctor_id'] = auth()->user()->id;
+
         $examination = OvarianCancerTest::create($data);
 
         return response()->json([
@@ -45,16 +50,15 @@ class OvarianCancerTestController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $pateint_id)
     {
-        $examination = OvarianCancerTest::find($id);
+        $examination = OvarianCancerTest::where('patient_id',$pateint_id)->latest()->first();
 
-        if($examination) {
-            return response()->json($examination);            
+        if($examination){
+            return response()->json($examination);  
         }else{
-            return response()->json(['error'=> 'Examination not found'],404);
+            return response()->json(null, 200);
         }
-        
     }
 
     /**
@@ -62,28 +66,32 @@ class OvarianCancerTestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            "breast_cancer_history" => 'nullable|boolean',
-            "relatives_with_ovarian_cancer" => 'nullable|boolean',
-            "gene_mutation_or_lynch_syndrome" => 'nullable|boolean',
-            "tvs_result" => 'nullable|string',
-            "tvs_comment" => 'nullable|string',
-            "ca-125_result" => 'nullable|string',
-            "ca-125_comment" => 'nullable|string',
-            "recommendations" => 'nullable|string',
-        ]);
+        $test = OvarianCancerTest::find($id);
+        if($test){
+            $data = $request->validate([
+                'patient_id' => 'required|exists:patients,id',
+                "breast_cancer_history" => 'nullable|boolean',
+                "relatives_with_ovarian_cancer" => 'nullable|boolean',
+                "gene_mutation_or_lynch_syndrome" => 'nullable|boolean',
+                "tvs_result" => 'nullable|string',
+                "tvs_comment" => 'nullable|string',
+                "ca-125_result" => 'nullable|string',
+                "ca-125_comment" => 'nullable|string',
+                "recommendations" => 'nullable|string',
+            ]);
 
-        $oldExamination = OvarianCancerTest::find($id);
-        $data['test_id'] = $oldExamination->id;
-        $data['doctor_id'] = 1;
+            $data['doctor_id'] = auth()->user()->id;
 
-        $newExamination = OvarianCancerHistoryTest::create($data);
-       
-        return response()->json([
-        'message' => 'Ovarian Test has been updated successfully',
-        'examination' => $newExamination],
-        200);
+            $newExamination = OvarianCancerTest::create($data);
+        
+            return response()->json([
+            'message' => 'Ovarian Test has been updated successfully',
+            'examination' => $newExamination],
+            200);
+
+        }else{
+            return response()->json(['error' => 'No examination found'], 404);
+        }
     }
 
     /**
